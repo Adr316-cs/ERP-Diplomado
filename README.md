@@ -4,7 +4,7 @@ Proyecto ERP multiempresa basado en una arquitectura modular por dominios.
 
 ## Estado
 
-Fase 10: CRM, proyectos y Help Desk.
+Fase 11: dashboards, reportes, auditoría y notificaciones.
 
 La evaluación inicial está documentada en
 [`docs/architecture/ARCHITECTURE-ASSESSMENT.md`](docs/architecture/ARCHITECTURE-ASSESSMENT.md).
@@ -72,3 +72,6 @@ compleja en esta fase.
 
 CRM, proyectos y Help Desk están disponibles bajo `/crm`, `/projects` y
 `/helpdesk`, siempre protegidos por autenticación y contexto de empresa.
+
+Los reportes, dashboards, auditoría y notificaciones están disponibles bajo
+`/reports`, `/audit` y `/notifications`, con datos aislados por empresa y usuario.
