@@ -5,7 +5,7 @@ const movementSchema = new Schema({
   productId: { type: Schema.Types.ObjectId, ref: "Product", required: true, index: true },
   warehouseId: { type: Schema.Types.ObjectId, ref: "Warehouse", required: true },
   destinationWarehouseId: { type: Schema.Types.ObjectId, ref: "Warehouse" },
-  type: { type: String, enum: ["IN", "OUT", "ADJUSTMENT", "TRANSFER"], required: true },
+  type: { type: String, enum: ["IN", "OUT", "TRANSFER", "ADJUSTMENT", "RETURN"], required: true },
   quantity: { type: Number, required: true, min: 0.000001 },
   reason: { type: String, required: true, trim: true, maxlength: 300 },
   createdBy: { type: Schema.Types.ObjectId, ref: "User", required: true }

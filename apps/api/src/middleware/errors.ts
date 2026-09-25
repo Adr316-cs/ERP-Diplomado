@@ -33,6 +33,10 @@ export const errorHandler: ErrorRequestHandler = (error, _request, response, _ne
     return;
   }
 
+  if (typeof error === "object" && error !== null && "code" in error && error.code === 11000) {
+    response.status(409).json({ success: false, message: "Ya existe un recurso con esos valores únicos", code: "DUPLICATE_RESOURCE" });
+    return;
+  }
   if (error instanceof HttpError) {
     response.status(error.statusCode).json({
       success: false,

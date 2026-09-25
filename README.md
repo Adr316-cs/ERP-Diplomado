@@ -1,77 +1,48 @@
 # ERP Empresarial Modular
 
-Proyecto ERP multiempresa basado en una arquitectura modular por dominios.
+Monorepo npm multiempresa con API Express/TypeScript y Mongoose, clientes web y móvil en React Native y contratos compartidos en `packages/types`.
 
-## Estado
+## Estado de fases
 
-Fase 11: dashboards, reportes, auditoría y notificaciones.
+### Estado verificado al 2026-09-24
 
-La evaluación inicial está documentada en
-[`docs/architecture/ARCHITECTURE-ASSESSMENT.md`](docs/architecture/ARCHITECTURE-ASSESSMENT.md).
+FASE 10 (Proyectos + Help Desk) y FASE 11 (RR. HH.) están completadas en su alcance inicial. La verificación más reciente pasó `typecheck`, `lint`, `build` y las 66 pruebas del monorepo, incluidas integraciones MongoDB replica set. La siguiente fase según el prompt maestro es FASE 12 (Reportes y Dashboard).
 
-La API dispone de endpoints de liveness (`/api/v1/health`) y readiness
-(`/api/v1/health/ready`), además de rutas base de autenticación bajo
-`/api/v1/auth`.
+- FASE 0–3: arquitectura, base técnica, autenticación/autorización y contexto multiempresa/multisucursal implementados.
+- FASE 4–6: catálogos, compras e inventario implementados e integrados con MongoDB replica set en pruebas.
+- FASE 7: ventas implementada con cotización, pedido, aprobación, preparación, entrega, factura, inventario y cuentas por cobrar. Flujo verificado con una prueba de integración replica set.
+- FASE 8: finanzas con cuentas, ingresos/egresos, pagos, CxP/CxC y presupuestos implementada e integrada con ventas y compras.
+- FASE 9: CRM con leads, calificación, oportunidades, cotización vinculada, contactos, actividades, interacciones e historial de cliente implementado e integrado con ventas.
+- FASE 10–18: pendientes según el orden descrito en el prompt maestro.
 
-También dispone de endpoints protegidos bajo `/api/v1/companies` para empresas
-y sucursales.
+Última validación del monorepo: `typecheck`, `lint`, `build` y `test` finalizaron correctamente; 63 pruebas pasaron. La suite usa MongoDB replica set efímero para los flujos de catálogos, compras, inventario, ventas, finanzas y CRM. No se ha verificado la conexión en vivo con Atlas ni la interfaz en dispositivos.
 
-## Comandos
+## Requisitos y comandos
 
-Usa `npm.cmd` en PowerShell si la política local bloquea `npm.ps1`:
+Node.js `>=20.12.0` y npm. Ejecuta los comandos desde la raíz:
 
-```text
+```powershell
 npm.cmd install
 npm.cmd run typecheck
-npm.cmd run build
 npm.cmd run lint
+npm.cmd run build
 npm.cmd test
+npm.cmd run dev --workspace=@erp/api
 ```
 
-## Estructura inicial
+## Variables de entorno
 
-- `apps/api`: API REST inicial con Express y TypeScript.
-- `apps/web`: entrada inicial React Native Web.
-- `apps/mobile`: entrada inicial React Native.
-- `packages/types`: contratos de respuesta compartidos.
+Copia `.env.example` a `.env` en la raíz y configura `MONGODB_URI` con la cadena de conexión de Atlas. El código lee la URI completa desde esa variable; protege `.env` y no subas secretos a Git. Node 20.12+ carga el archivo local al iniciar la API.
 
-El workspace contiene dependencias instaladas y lockfile; todavía no contiene módulos funcionales del ERP.
+## Documentación
 
-La comunicación con MongoDB Atlas ocurrirá exclusivamente desde `apps/api`.
+- [Evaluación de arquitectura](docs/architecture/ARCHITECTURE-ASSESSMENT.md)
+- [Arquitectura](docs/architecture/ARCHITECTURE.md)
+- [Base de datos](docs/architecture/DATABASE.md)
+- [Seguridad](docs/architecture/SECURITY.md)
+- [API](docs/architecture/API.md)
+- [Compras](docs/api/purchases.md)
+- [Ventas](docs/api/sales.md)
+- [Finanzas](docs/api/finance.md)
 
-La conexión MongoDB está preparada mediante Mongoose: es opcional en desarrollo
-y test, pero obligatoria en producción mediante `MONGODB_URI`.
-
-La autenticación usa bcrypt, access tokens y refresh tokens JWT. El backend
-valida Bearer tokens, usuarios activos, `tokenVersion` y permisos derivados de
-roles. El registro y login requieren una conexión MongoDB activa.
-
-Las operaciones empresariales verifican membresía, propiedad cuando corresponde
-y formatos de identificadores antes de consultar datos.
-
-El catálogo y CRM inicial están disponibles bajo rutas anidadas por empresa:
-`/customers`, `/suppliers`, `/categories` y `/products`.
-
-Inventario está disponible bajo `/warehouses` e `/inventory`, con movimientos
-`IN`, `OUT`, `ADJUSTMENT` y `TRANSFER`.
-
-Los movimientos actualizan saldos y generan un registro auditable dentro de una
-transacción MongoDB. Las salidas y transferencias no permiten stock negativo.
-
-Ventas está disponible bajo `/sales/quotes` y `/sales/orders`. Confirmar un
-pedido descuenta inventario y crea la venta y el movimiento de salida en una
-misma transacción.
-
-Compras está disponible bajo `/purchases/orders`. Una orden pasa por `DRAFT`,
-`APPROVED` y `RECEIVED`; la recepción incrementa inventario y registra un
-movimiento `IN` en una transacción.
-
-Finanzas está disponible bajo `/finance`, con cuentas, ingresos, egresos y pagos
-vinculados a ventas u órdenes de compra. No se implementa contabilidad fiscal
-compleja en esta fase.
-
-CRM, proyectos y Help Desk están disponibles bajo `/crm`, `/projects` y
-`/helpdesk`, siempre protegidos por autenticación y contexto de empresa.
-
-Los reportes, dashboards, auditoría y notificaciones están disponibles bajo
-`/reports`, `/audit` y `/notifications`, con datos aislados por empresa y usuario.
+El README registra el estado validado por fase; el código y las pruebas son la fuente definitiva de implementación.

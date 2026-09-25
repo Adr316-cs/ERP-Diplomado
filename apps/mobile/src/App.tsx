@@ -1,13 +1,10 @@
-import { SafeAreaView, ScrollView, Text, View } from "react-native";
+﻿import { Breadcrumbs, Dashboard, EmptyState, Layout } from "@erp/ui";
 
 export const App = () => (
-  <SafeAreaView style={{ flex: 1, backgroundColor: "#f5f7fb" }}>
-    <ScrollView contentContainerStyle={{ padding: 24 }}>
-      <Text style={{ fontSize: 28, fontWeight: 700, color: "#14213d" }}>ERP Empresarial</Text>
-      <View style={{ backgroundColor: "#fff", borderRadius: 12, padding: 18, marginTop: 16 }}>
-        <Text style={{ fontWeight: 600, marginBottom: 8 }}>Dashboard base</Text>
-        <Text>Aplicación móvil base lista para continuar con autenticación y navegación.</Text>
-      </View>
-    </ScrollView>
-  </SafeAreaView>
+  <Layout title="ERP Empresarial" subtitle="Espacio de trabajo" navigation={[{ label: "Dashboard", active: true }, { label: "Módulos" }, { label: "Configuración" }]}>
+    <Breadcrumbs items={["Inicio", "Dashboard"]} />
+    <Dashboard>
+      <EmptyState title="Bienvenido" description="La base visual está lista. Los indicadores aparecerán cuando se conecten los módulos y servicios correspondientes." />
+    </Dashboard>
+  </Layout>
 );

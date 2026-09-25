@@ -7,6 +7,7 @@ import { movementSchema } from "../src/modules/inventory/inventory.validation.js
 
 test("inventory movement rules prevent negative stock", () => {
   assert.equal(calculateNextStock(10, "IN", 5), 15);
+  assert.equal(calculateNextStock(10, "RETURN", 5), 15);
   assert.equal(calculateNextStock(10, "OUT", 5), 5);
   assert.equal(calculateNextStock(10, "ADJUSTMENT", 3), 3);
   assert.throws(() => calculateNextStock(2, "OUT", 3), /Existencias insuficientes/);
@@ -44,7 +45,7 @@ test("warehouse and inventory routes require authentication", async () => {
     JWT_REFRESH_EXPIRES_IN: "7d"
   });
 
-  for (const resource of ["warehouses", "inventory"]) {
+  for (const resource of ["warehouses", "inventory", "inventory/movements"]) {
     const response = await request(app).get(`/api/v1/companies/507f1f77bcf86cd799439011/${resource}`);
     assert.equal(response.status, 401);
     assert.equal(response.body.code, "UNAUTHORIZED");

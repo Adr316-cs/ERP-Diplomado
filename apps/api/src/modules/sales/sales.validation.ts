@@ -13,9 +13,6 @@ export const quoteSchema = z.object({
 });
 
 export const orderSchema = z.object({
-  branchId: z.string().trim().min(1),
   warehouseId: z.string().trim().min(1),
-  customerId: z.string().trim().min(1),
-  quoteId: z.string().trim().min(1).optional(),
-  lines: z.array(lineSchema).min(1).max(500)
+  quoteId: z.string().trim().min(1)
 });

@@ -1,42 +1,33 @@
 # Seguridad
 
-## Capas implementadas
+## Controles observados e implementados
 
-- Helmet.
-- CORS explÃ­cito.
-- rate limiting.
-- validaciÃ³n con Zod.
-- manejo centralizado de errores.
-- hashing con bcrypt.
-- JWT con access y refresh token.
-- validaciÃ³n de usuario activo.
-- aislamiento por empresa.
-- control por permisos del usuario.
+- Bearer JWT con access/refresh separados, bcryptjs, expiración y `tokenVersion`.
+- El refresh se rota con una actualización atómica por versión; volver a usar el token anterior se rechaza. Logout también incrementa la versión y revoca tokens de esa sesión de usuario.
+- Usuarios activos/inactivos se comprueban al autenticar.
+- Registro asigna únicamente `EMPLOYEE`; el cliente no puede enviar roles.
+- Catálogo inicial de roles: `SUPER_ADMIN`, `ADMIN`, `MANAGER`, `SALES`, `PURCHASE`, `WAREHOUSE`, `FINANCE`, `HR`, `SUPPORT` y `EMPLOYEE`.
+- Permisos granulares iniciales y middleware de autorización aplicado a las rutas empresariales existentes. Entradas/salidas de inventario, ajustes y transferencias requieren permisos distintos.
+- El acceso por membresía sigue siendo obligatorio. La propiedad de una empresa da permisos dentro de esa empresa únicamente.
+- Validación Zod, Helmet, CORS configurable, rate limiting y Pino con redacción de Authorization/cookies.
+- Errores internos se responden sin stack traces.
 
-## Reglas crÃ­ticas
+Los permisos se cargan desde roles persistidos, no se confía en los permisos que mande el cliente. En rutas de empresa se usan las asignaciones `UserRole` y permisos resueltos para esa empresa. El seed conserva personalizaciones de roles existentes; el rol histórico `user` recibe permisos mínimos compatibles.
 
-- NingÃºn cliente debe conectarse directamente a MongoDB.
-- Toda autorizaciÃ³n debe validarse en backend.
-- Todas las rutas sensibles deben verificar:
-  - autenticaciÃ³n
-  - usuario activo
-  - pertenencia a la empresa
-  - permisos apropiados
-  - propiedad del recurso cuando aplica
+## Límites pendientes
 
-## Riesgos actuales
+`UserRole` ya asigna roles por empresa y los endpoints de gestión están protegidos para el propietario. `UserCompany` es la fuente canónica de membresías y roles siguen en `UserRole`; `User.memberships` se conserva en doble escritura como compatibilidad temporal mientras lecturas migran documentos antiguos. Varios dominios carecen de alcance por sucursal, por lo que el aislamiento multisucursal integral sigue pendiente.
 
-- falta de integraciÃ³n completa con MongoDB real
-- permisos granulares no estÃ¡n aplicados a todas las rutas
-- estrategia de refresh tokens aÃºn necesita revisiÃ³n de revocaciÃ³n y rotaciÃ³n
-- auditorÃ­a automÃ¡tica no se dispara de forma universal en todas las operaciones crÃ­ticas
+No hay endpoint de recuperación de contraseña. No se ejecutó el flujo de registro, seed o rotación contra MongoDB real; la suite actual prueba tokens, reglas del guard y middleware, pero no persistencia.
 
-## RecomendaciÃ³n inmediata
+## Secretos
 
-La fase 1 debe reforzar:
+No guardar contraseñas, URI de base de datos ni secretos JWT en Git. `.env` está ignorado y `.env.example` solo tiene valores vacíos. Si una credencial real estuvo expuesta, rotarla en el proveedor; borrarla del archivo no invalida copias anteriores.
 
-- entorno con secretos reales
-- validaciÃ³n de JWT de producciÃ³n
-- log y monitoreo
-- cierre elegante del servidor
-- revisiÃ³n de rutas sensibles por permisos
+En producción, los secretos JWT deben ser distintos y de al menos 32 caracteres según la validación actual. Usar el gestor de secretos del entorno de despliegue.
+
+## Revisión antes de producción
+
+Revisar permisos por ruta al añadir endpoints, asignación de roles por tenant, abuso de refresh tokens, rate limits específicos de autenticación, CORS, filtros multiempresa/sucursal, logs, dependencias, recuperación de acceso e integración persistente.
+
+

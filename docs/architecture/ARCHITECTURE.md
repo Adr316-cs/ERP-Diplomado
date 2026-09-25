@@ -1,110 +1,35 @@
-# Arquitectura del ERP
+﻿# Arquitectura actual
 
-## Estado real del repositorio
+Fecha de revisión: 2026-09-23
 
-El repositorio actual ya contiene una base funcional de backend y una estructura modular de dominio. No es un proyecto vacío ni una red desde cero. La fuente de verdad del estado real es el código en `apps/api/src` y los workspaces del monorepo.
+## Estado
 
-## Principios
+El repositorio es un monorepo npm con workspaces `apps/*` y `packages/*`, TypeScript y Node.js. Las aplicaciones son `apps/api`, `apps/web` y `apps/mobile`; `packages/types` contiene contratos TypeScript sencillos para respuestas HTTP.
 
-- Monorepo con npm workspaces.
-- API REST versionada bajo `/api/v1`.
-- Dominio modular por carpeta.
-- Multitenancy por `companyId`.
-- Sucursales por `branchId` cuando corresponda.
-- Seguridad en backend antes de cualquier operación crítico.
-- Validación con Zod.
-- Transacciones MongoDB para operaciones críticas.
-- Documentación técnica y de dominio actualizada con cada fase.
+La API es Express 4 con módulos por dominio. Cada módulo agrupa archivos de modelo, servicio, rutas, validación y tipos por nombre de archivo. Esta organización es coherente y se conserva; no hace falta migrarla a subdirectorios `controller/`, `service/`, etc. antes de que exista una necesidad concreta.
 
-## Estructura actual
+La API monta las rutas bajo `/api/v1`. La persistencia usa MongoDB mediante Mongoose. Web y móvil comparten un shell React Native inicial desde `packages/ui`; todavía no existe configuración completa de ejecución/despliegue de clientes ni pantallas de dominio.
 
-```text
-apps/
-  api/
-  web/
-  mobile/
-packages/
-  types/
-docs/
-  architecture/
-```
+## Módulos observados en código
 
-## Backend actual
+Autenticación; empresas y sucursales; clientes; proveedores; categorías; productos; almacenes; inventario; ventas; compras; finanzas; CRM; proyectos; Help Desk; recursos humanos; auditoría; notificaciones y reportes.
 
-La API se compone por dominios bajo `apps/api/src/modules`:
+La presencia de un módulo no certifica que cubra todos los requisitos ERP ni que haya sido validado contra MongoDB real. No se encontraron módulos de integraciones externas o IA en el inventario revisado.
 
-- auth
-- companies
-- branches
-- customers
-- suppliers
-- products
-- categories
-- inventory
-- warehouses
-- purchases
-- sales
-- finance
-- crm
-- projects
-- helpdesk
-- hr
-- reports
-- notifications
-- audit
+## Límites y convenciones
 
-Cada dominio mantiene un patrón coherente basado en:
+- Los dominios permanecen en `apps/api/src/modules/<domain>`.
+- `app.ts` compone middleware y routers; servicios contienen las operaciones de dominio y repositorios encapsulan acceso a datos en los módulos que los tienen.
+- Los clientes no acceden directamente a MongoDB.
+- Los contratos compartidos se publican desde `packages/types`.
+- Los cambios siguen el orden de fases establecido en el prompt maestro y deben actualizar documentación y validaciones.
 
-- model
-- validation
-- service
-- routes
-- repository cuando aplica
+## Dependencias arquitectónicas
 
-## Frontend objetivo para Fase 1
+Los flujos existentes relacionan ventas e inventario, compras e inventario, pagos y finanzas, y reportes con varios dominios. Auditoría y notificaciones tienen servicios, pero su invocación automática desde todas las operaciones críticas no está demostrada. La API aún necesita evaluar cobertura de permisos por endpoint y consistencia transaccional.
 
-El web y mobile deben mantenerse como base operacional mínima. La lógica crítica no debe ir al cliente; solo se debe mover la UI y la gestión de sesión.
+## Decisiones
 
-Deben existir, al menos:
+Se conserva el monorepo modular y la estructura actual por archivos. No se agregan microservicios, paquetes o herramientas de UI hasta que la fase correspondiente lo justifique.
 
-- Layout
-- Header
-- Sidebar
-- Navigation
-- Dashboard shell
-- Loading
-- ErrorState
-- EmptyState
-- Button
-- Input
-- Modal
-- Table
-- Form
-- Notification
 
-## Seguridad
-
-- JWT access/refresh tokens.
-- bcrypt para contraseñas.
-- validación de membresías por empresa.
-- middleware de acceso por compañía.
-- controles por permisos.
-- no acceso directo a MongoDB desde clientes.
-
-## Dependencias clave
-
-- Express
-- TypeScript
-- Mongoose
-- Zod
-- bcryptjs
-- jose
-- helmet
-- cors
-- express-rate-limit
-- pino
-- react / react-native / react-native-web
-
-## Estado de la fase actual
-
-La base ya está desarrollada en backend y compila. La Fase 0 debe centrarse en documentar el estado real y reforzar la fundación antes de continuar con nuevas capas funcionales.

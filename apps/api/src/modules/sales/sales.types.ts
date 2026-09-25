@@ -10,3 +10,5 @@ export type SalesLine = {
   unitPrice: number;
   total: number;
 };
+
+export type SalesOrderStatus = "DRAFT" | "SUBMITTED" | "PENDING_APPROVAL" | "APPROVED" | "PREPARING" | "READY_FOR_DELIVERY" | "DELIVERED" | "REJECTED" | "CANCELLED";

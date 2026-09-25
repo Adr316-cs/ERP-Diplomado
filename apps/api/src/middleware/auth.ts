@@ -1,4 +1,4 @@
-import type { RequestHandler } from "express";
+﻿import type { RequestHandler } from "express";
 import { loadEnvironment } from "../config/environment.js";
 import { HttpError } from "./errors.js";
 import { verifyToken } from "../modules/auth/auth.tokens.js";
@@ -34,9 +34,17 @@ export const requireAuth: RequestHandler = async (request, _response, next) => {
 };
 
 export const requirePermission = (permission: string): RequestHandler => (request, _response, next) => {
-  if (!request.auth?.permissions.includes(permission)) {
+  const isCompanyOwner = Boolean(request.companyId && request.auth?.memberships.some((membership) => membership.companyId === request.companyId && membership.isOwner));
+  if (!request.auth?.permissions.includes(permission) && !isCompanyOwner) {
     next(new HttpError(403, "FORBIDDEN", "No tienes permisos para realizar esta operación"));
     return;
   }
   next();
 };
+
+export const requireInventoryMovementPermission: RequestHandler = (request, response, next) => {
+  const type = request.body?.type;
+  const permission = type === "TRANSFER" ? "inventory.transfer" : type === "ADJUSTMENT" ? "inventory.adjust" : "inventory.create";
+  requirePermission(permission)(request, response, next);
+};
+

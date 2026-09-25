@@ -2,14 +2,19 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 import request from "supertest";
 import { createApp } from "../src/app.js";
-import { accountSchema, paymentSchema, transactionSchema } from "../src/modules/finance/finance.validation.js";
+import { accountSchema, budgetSchema, paymentSchema, transactionSchema } from "../src/modules/finance/finance.validation.js";
+import { AccountsPayableModel, AccountsReceivableModel, BudgetModel } from "../src/modules/finance/finance.model.js";
 
 test("finance schemas validate account, transaction and payment context", () => {
   assert.equal(accountSchema.safeParse({ name: "Caja", code: "cash", type: "CASH" }).success, true);
   assert.equal(transactionSchema.safeParse({ accountId: "account-1", type: "INCOME", amount: 10, description: "Venta" }).success, true);
   assert.equal(paymentSchema.safeParse({ accountId: "account-1", type: "CUSTOMER", amount: 10 }).success, false);
   assert.equal(paymentSchema.safeParse({ accountId: "account-1", type: "CUSTOMER", amount: 10, saleId: "sale-1" }).success, true);
+  assert.equal(paymentSchema.safeParse({ accountId: "account-1", paymentMethodId: "method-1", type: "CUSTOMER", amount: 10, saleId: "sale-1" }).success, true);
   assert.equal(paymentSchema.safeParse({ accountId: "account-1", type: "SUPPLIER", amount: 10, purchaseOrderId: "order-1" }).success, true);
+  assert.equal(transactionSchema.safeParse({ accountId: "account-1", type: "EXPENSE", amount: 10, description: "Gasto", saleId: "sale-1" }).success, false);
+  assert.equal(budgetSchema.safeParse({ code: "BUD-1", name: "Presupuesto", type: "EXPENSE", periodStart: "2026-01-01", periodEnd: "2026-12-31", amount: 1000 }).success, true);
+  assert.equal(budgetSchema.safeParse({ code: "BUD-2", name: "Presupuesto", type: "EXPENSE", periodStart: "2026-12-31", periodEnd: "2026-01-01", amount: 1000 }).success, false);
 });
 
 test("finance routes require authentication", async () => {
@@ -31,4 +36,21 @@ test("finance routes require authentication", async () => {
     assert.equal(response.status, 401);
     assert.equal(response.body.code, "UNAUTHORIZED");
   }
+  for (const path of ["/accounts-payable", "/accounts-receivable", "/transactions", "/payments", "/budgets"]) {
+    const response = await request(app).get(`/api/v1/companies/507f1f77bcf86cd799439011/finance${path}`);
+    assert.equal(response.status, 401);
+    assert.equal(response.body.code, "UNAUTHORIZED");
+  }
+});
+
+test("accounts payable is unique per company and purchase order", () => {
+  const indexes = AccountsPayableModel.schema.indexes();
+  assert.equal(indexes.some(([keys, options]) => keys.companyId === 1 && keys.purchaseOrderId === 1 && options.unique === true), true);
+  const status = AccountsPayableModel.schema.path("status").options.enum as string[];
+  assert.deepEqual(status, ["OPEN", "PARTIAL", "PAID"]);
+});
+
+test("accounts receivable and budgets have tenant-scoped unique indexes", () => {
+  assert.equal(AccountsReceivableModel.schema.indexes().some(([keys, options]) => keys.companyId === 1 && keys.saleId === 1 && options.unique === true), true);
+  assert.equal(BudgetModel.schema.indexes().some(([keys, options]) => keys.companyId === 1 && keys.code === 1 && keys.periodStart === 1 && options.unique === true), true);
 });

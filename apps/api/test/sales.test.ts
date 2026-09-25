@@ -13,8 +13,8 @@ test("sales schemas require valid lines and operational context", () => {
   };
 
   assert.equal(quoteSchema.safeParse(valid).success, true);
-  assert.equal(orderSchema.safeParse(valid).success, true);
-  assert.equal(orderSchema.safeParse({ ...valid, lines: [{ productId: "product-1", quantity: 0 }] }).success, false);
+  assert.equal(orderSchema.safeParse({ warehouseId: "warehouse-1", quoteId: "quote-1" }).success, true);
+  assert.equal(orderSchema.safeParse(valid).success, false);
 });
 
 test("sales routes require authentication", async () => {

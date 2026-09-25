@@ -1,4 +1,12 @@
+﻿import { existsSync } from "node:fs";
+import { resolve } from "node:path";
 import { z } from "zod";
+
+// Node 20.12+ provides a built-in .env loader. Existing process variables take precedence.
+const localEnvironmentFile = resolve(process.cwd(), ".env");
+if (process.env.NODE_ENV !== "test" && existsSync(localEnvironmentFile) && typeof process.loadEnvFile === "function") {
+  process.loadEnvFile(localEnvironmentFile);
+}
 
 const environmentSchema = z.object({
   NODE_ENV: z.enum(["development", "test", "production"]).default("development"),

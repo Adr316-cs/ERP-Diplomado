@@ -1,4 +1,4 @@
-export type AuthUser = {
+﻿export type AuthUser = {
   id: string;
   email: string;
   name: string;
@@ -11,6 +11,8 @@ export type CompanyMembership = {
   companyId: string;
   branchIds: string[];
   isOwner: boolean;
+  roles?: string[];
+  permissions?: string[];
 };
 
 export type AuthTokens = {

@@ -5,8 +5,17 @@ export const departmentSchema = z.object({
   code: z.string().trim().min(2).max(20).regex(/^[A-Z0-9_-]+$/)
 });
 
+export const positionSchema = z.object({
+  departmentId: z.string().trim().min(1).optional(),
+  title: z.string().trim().min(2).max(120),
+  code: z.string().trim().min(2).max(20).regex(/^[A-Z0-9_-]+$/),
+  description: z.string().trim().max(500).optional()
+});
+
 export const employeeSchema = z.object({
+  branchId: z.string().trim().min(1).optional(),
   departmentId: z.string().trim().min(1),
+  positionId: z.string().trim().min(1).optional(),
   userId: z.string().trim().min(1),
   firstName: z.string().trim().min(2).max(100),
   lastName: z.string().trim().min(2).max(100),
@@ -34,6 +43,9 @@ export const attendanceSchema = z.object({
   checkIn: z.coerce.date().optional(),
   checkOut: z.coerce.date().optional(),
   status: z.enum(["PRESENT", "ABSENT", "LATE", "LEAVE"]).default("PRESENT")
+}).refine((value) => !value.checkIn || !value.checkOut || value.checkOut >= value.checkIn, {
+  message: "checkOut debe ser posterior a checkIn",
+  path: ["checkOut"]
 });
 
 export const leaveSchema = z.object({
@@ -41,9 +53,18 @@ export const leaveSchema = z.object({
   type: z.enum(["VACATION", "SICK", "PERSONAL", "MATERNITY", "UNPAID"]),
   startDate: z.coerce.date(),
   endDate: z.coerce.date(),
-  reason: z.string().trim().max(300).optional(),
-  status: z.enum(["PENDING", "APPROVED", "REJECTED"]).default("PENDING")
+  reason: z.string().trim().max(300).optional()
 }).refine((value) => value.endDate >= value.startDate, {
   message: "endDate debe ser mayor o igual a startDate",
   path: ["endDate"]
+});
+
+export const leaveStatusSchema = z.object({ status: z.enum(["APPROVED", "REJECTED"]) });
+export const employeeDocumentSchema = z.object({
+  name: z.string().trim().min(2).max(180),
+  category: z.enum(["IDENTITY", "CONTRACT", "CERTIFICATE", "OTHER"]),
+  storageKey: z.string().trim().min(1).max(500),
+  contentType: z.string().trim().min(1).max(120),
+  sizeBytes: z.number().int().min(1).max(25_000_000),
+  expiresAt: z.coerce.date().optional()
 });

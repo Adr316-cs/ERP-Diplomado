@@ -9,6 +9,7 @@ import { errorHandler, HttpError } from "./middleware/errors.js";
 import { createAuthRouter } from "./modules/auth/auth.routes.js";
 import { createCompanyRouter } from "./modules/companies/company.routes.js";
 import { createCategoryRouter } from "./modules/categories/category.routes.js";
+import { createMasterDataRouter } from "./modules/master-data/master-data.routes.js";
 import { createCustomerRouter } from "./modules/customers/customer.routes.js";
 import { createProductRouter } from "./modules/products/product.routes.js";
 import { createSupplierRouter } from "./modules/suppliers/supplier.routes.js";
@@ -43,6 +44,7 @@ export const createApp = (environment = loadEnvironment()) => {
   app.use("/api/v1/companies/:companyId/customers", createCustomerRouter());
   app.use("/api/v1/companies/:companyId/suppliers", createSupplierRouter());
   app.use("/api/v1/companies/:companyId/categories", createCategoryRouter());
+  app.use("/api/v1/companies/:companyId/master-data", createMasterDataRouter());
   app.use("/api/v1/companies/:companyId/products", createProductRouter());
   app.use("/api/v1/companies/:companyId/warehouses", createWarehouseRouter());
   app.use("/api/v1/companies/:companyId/inventory", createInventoryRouter());

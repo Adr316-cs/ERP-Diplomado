@@ -7,3 +7,5 @@ export const supplierSchema = z.object({
   taxId: z.string().trim().max(50).optional(),
   branchId: z.string().trim().min(1).optional()
 });
+export const supplierUpdateSchema = supplierSchema.partial().refine((value) => Object.keys(value).length > 0);
+

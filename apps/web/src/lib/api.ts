@@ -34,5 +34,18 @@ export const api = {
   logout: () =>
     request<null>("/auth/logout", {
       method: "POST"
-    })
+    }),
+  catalog: (companyId: string, resource: string, query: { q?: string; page?: number; pageSize?: number }) => {
+    const params = new URLSearchParams();
+    if (query.q) params.set("q", query.q);
+    if (query.page) params.set("page", String(query.page));
+    if (query.pageSize) params.set("pageSize", String(query.pageSize));
+    return fetch(`${API_BASE_URL}/companies/${encodeURIComponent(companyId)}/${resource}?${params.toString()}`, {
+      headers: { Authorization: `Bearer ${localStorage.getItem("erp.accessToken") ?? ""}` }
+    }).then(async (response) => {
+      const payload = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(payload?.error?.message ?? "La solicitud falló");
+      return { data: payload.data as Record<string, unknown>[], meta: payload.meta as { page: number; pageSize: number; total: number; totalPages: number } | undefined };
+    });
+  }
 };

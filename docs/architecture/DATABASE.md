@@ -1,46 +1,36 @@
 # Base de datos
 
-## Motor
+## Tecnología y conexión
 
-MongoDB con Mongoose.
+La API utiliza Mongoose (`apps/api/src/database/mongoose.ts`). `server.ts` espera a `connectDatabase(MONGODB_URI)` antes de abrir el puerto. Si la URI está vacía, la conexión queda deshabilitada en desarrollo/test; `loadEnvironment` exige URI en producción. El timeout de selección de servidor es de cinco segundos.
 
-## Reglas de diseÃ±o
+La URI debe estar en una variable de entorno local o de despliegue, nunca en código ni en un archivo de ejemplo. Atlas requiere una IP de cliente autorizada y un usuario de base de datos. Las transacciones requieren Atlas o un replica set.
 
-- Los documentos empresariales deben incluir `companyId`.
-- Cuando aplica, deben incluir `branchId`.
-- Cada modelo debe conservar `createdBy` y timestamps.
-- Se deben definir Ã­ndices para bÃºsquedas frecuentes.
-- Se priorizarÃ¡n referencias por ObjectId para mantener trazabilidad.
+## Modelos y convenciones observadas
 
-## Patrones actuales en el repositorio
+Los modelos de dominio usan Mongoose y la mayoría declara `timestamps`. Los modelos empresariales incluyen `companyId`; varios incluyen `branchId`. Se han definido índices en algunos modelos, incluidos identificadores únicos por empresa y saldos de inventario.
 
-- `companyId` en casi todos los modelos empresariales.
-- validaciÃ³n de pertenencia por empresa antes de operaciones sensibles.
-- transacciones para stock, ventas, compras y finanzas cuando corresponda.
-- movimiento de inventario con historial.
+Los servicios y repositorios deben filtrar por `companyId` y validar referencias dentro de la misma empresa. El contexto de sucursal y la obligatoriedad de `branchId` deben documentarse y probarse por dominio; no se asume cobertura universal.
 
-## Reglas de transacciÃ³n
+## Integridad
 
-Las operaciones de negocio crÃ­ticas deben ejecutarse con transacciones MongoDB cuando afecten mÃ¡s de un documento.
+Ventas confirmadas actualizan inventario y crean movimientos dentro de una sesión/transacción; recepciones de compras incrementan existencias transaccionalmente; finanzas usa transacciones en algunos flujos de pago. Falta ejecutar validación persistente real con una base aislada y revisar todas las rutas multi-documento.
 
-Ejemplos:
+## Pendientes
 
-- confirmar pedido / venta
-- recibir orden de compra
-- transferencias entre almacenes
-- movimientos de inventario que cambien stock y bitÃ¡cora
+- Inventariar índices y referencias de todos los modelos y documentar estrategias de migración.
+- Verificar índices únicos bajo escrituras concurrentes.
+- Ejecutar pruebas de integración con MongoDB replica set/Atlas de prueba.
+- Confirmar aislamiento por empresa y sucursal en cada consulta.
+- Definir política de backups y retención durante la fase de producción.
 
-## Limitaciones actuales
+## Autorización persistida
 
-- El entorno actual no tiene `MONGODB_URI` configurada.
-- Por eso la API arranca en modo desarrollo sin conexiÃ³n real.
-- El comportamiento correcto en producciÃ³n requiere MongoDB Atlas o un replica set.
+Los modelos `Permission`, `Role` y `User` almacenan claves, permisos asociados, roles y versión de tokens. El catálogo inicial de permisos/roles se upsertea al primer login, lectura autenticada o registro del proceso. Las personalizaciones de roles existentes se conservan; la asignación empresarial de roles queda para `UserRole` en FASE 3.
 
-## RecomendaciÃ³n inmediata
 
-Antes de seguir con mÃ³dulos mÃ¡s complejos, se debe validar a nivel de integraciÃ³n:
+## Alcance multisucursal por fase
 
-- conexiÃ³n efectiva a MongoDB
-- transacciones reales
-- Ã­ndices reales
-- validaciÃ³n de multiempresa vs sucursal
+El middleware exige membresía `UserCompany` (con fallback/migración de `User.memberships`) y filtra por sucursal los catálogos con `branchId`, ventas, compras e inventario por almacén. Los dominios sin dimensión de sucursal y los informes de finanzas/tickets deben añadirse o ajustarse en sus fases funcionales correspondientes. La persistencia multi-documento y la migración heredada requieren verificación con MongoDB replica set.
+
+
