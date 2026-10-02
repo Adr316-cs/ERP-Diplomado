@@ -24,8 +24,8 @@ fun TTCard(
     Card(
         modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.cardColors(containerColor = TecodeCard),
-        border = BorderStroke(1.dp, TecodeBorder)
+        colors = CardDefaults.cardColors(containerColor = STunSurfaceDark),
+        border = BorderStroke(1.dp, STunDarkBorder)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             if (title != null) {
@@ -33,14 +33,14 @@ fun TTCard(
                     text = title,
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
-                    color = TecodeTextPrimary
+                    color = STunWhite
                 )
                 if (subtitle != null) {
                     Spacer(modifier = Modifier.height(2.dp))
                     Text(
                         text = subtitle,
                         fontSize = 13.sp,
-                        color = TecodeTextMuted
+                        color = STunSlateGray
                     )
                 }
                 Spacer(modifier = Modifier.height(12.dp))
@@ -56,13 +56,13 @@ fun TTStatCard(
     value: String,
     modifier: Modifier = Modifier,
     trend: String? = null,
-    accentColor: Color = TecodeInfo
+    accentColor: Color = STunCyanAccent
 ) {
     Card(
         modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.cardColors(containerColor = TecodeCard),
-        border = BorderStroke(1.dp, TecodeBorder)
+        colors = CardDefaults.cardColors(containerColor = STunSurfaceDark),
+        border = BorderStroke(1.dp, STunDarkBorder)
     ) {
         Box(modifier = Modifier.fillMaxWidth()) {
             Box(
@@ -78,7 +78,7 @@ fun TTStatCard(
                     text = label.uppercase(),
                     fontSize = 11.sp,
                     fontWeight = FontWeight.Bold,
-                    color = TecodeTextMuted,
+                    color = STunSlateGray,
                     letterSpacing = 0.5.sp
                 )
                 Spacer(modifier = Modifier.height(6.dp))
@@ -86,7 +86,7 @@ fun TTStatCard(
                     text = value,
                     fontSize = 22.sp,
                     fontWeight = FontWeight.ExtraBold,
-                    color = TecodeTextPrimary
+                    color = STunWhite
                 )
                 if (trend != null) {
                     Spacer(modifier = Modifier.height(4.dp))

@@ -5,7 +5,7 @@ import { COLORS, RADIUS, SPACING, TYPOGRAPHY } from '../tokens';
 /**
  * TTSearch - Campo de búsqueda rápido Tec[ode ERP
  */
-export function TTSearch({ value, onChangeText, onClear, placeholder = 'Buscar en Tec[ode…', style }) {
+export function TTSearch({ value, onChangeText, onClear, placeholder = 'Buscar en el sistema…', style }) {
   const [focused, setFocused] = useState(false);
 
   return (

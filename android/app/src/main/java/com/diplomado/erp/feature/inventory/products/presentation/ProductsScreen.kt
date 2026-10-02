@@ -25,10 +25,10 @@ fun ProductsScreen(
 
     Box(modifier = modifier.fillMaxSize().padding(16.dp)) {
         when (val state = uiState) {
-            is ProductsUiState.Loading -> TTLoading(text = "Cargando catálogo de materiales de construcción...")
+            is ProductsUiState.Loading -> TTLoading(text = "Cargando catálogo de productos...")
             is ProductsUiState.Error -> {
                 TTEmptyState(
-                    title = "Error de materiales",
+                    title = "Error de catálogo",
                     description = state.message,
                     actionLabel = "Reintentar",
                     onAction = { viewModel.loadProducts() }
@@ -36,16 +36,16 @@ fun ProductsScreen(
             }
             is ProductsUiState.Success -> {
                 TTDataTable(
-                    title = "Materiales de Construcción",
-                    subtitle = "${state.total} insumos registrados",
+                    title = "Catálogo de Productos",
+                    subtitle = "${state.total} productos registrados",
                     items = state.products,
                     searchQuery = searchQuery,
                     onSearchChange = { viewModel.onSearchChange(it) },
                     onCreateClick = if (PermissionChecker.hasPermission("products.create")) {
-                        { /* Abrir diálogo crear material */ }
+                        { /* Abrir diálogo crear producto */ }
                     } else null,
-                    createLabel = "Nuevo material",
-                    emptyText = "Sin materiales de construcción registrados."
+                    createLabel = "Nuevo producto",
+                    emptyText = "Sin productos registrados."
                 ) { material ->
                     TTCard(modifier = Modifier.fillMaxWidth()) {
                         Row(
@@ -58,19 +58,19 @@ fun ProductsScreen(
                                     text = material.name,
                                     fontSize = 16.sp,
                                     fontWeight = FontWeight.Bold,
-                                    color = TecodeTextPrimary
+                                    color = STunWhite
                                 )
                                 Spacer(modifier = Modifier.height(2.dp))
                                 Text(
                                     text = "SKU: ${material.sku} • Unidad: ${material.unit ?: "unidad"} • Costo: $${String.format("%.2f", material.costPrice ?: 0.0)}",
                                     fontSize = 12.sp,
-                                    color = TecodeTextMuted
+                                    color = STunSlateGray
                                 )
                                 if ((material.minStock ?: 0.0) > 0) {
                                     Text(
                                         text = "Stock mín: ${material.minStock} | Stock máx: ${material.maxStock ?: "N/A"}",
                                         fontSize = 11.sp,
-                                        color = TecodeTextSecondary
+                                        color = STunBlueSecondary
                                     )
                                 }
                             }

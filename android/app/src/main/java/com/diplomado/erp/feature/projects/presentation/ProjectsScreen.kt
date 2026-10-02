@@ -1,6 +1,5 @@
 package com.diplomado.erp.feature.projects.presentation
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -42,15 +41,15 @@ fun ProjectsScreen(
         ) {
             Column {
                 Text(
-                    text = "Mis Obras",
+                    text = "Proyectos",
                     fontSize = 22.sp,
                     fontWeight = FontWeight.ExtraBold,
-                    color = TecodeTextPrimary
+                    color = STunWhite
                 )
                 Text(
-                    text = "Proyectos de Construcción y Centros de Control",
+                    text = "Proyectos y Centros de Control",
                     fontSize = 12.sp,
-                    color = TecodeTextMuted
+                    color = STunSlateGray
                 )
             }
         }
@@ -61,17 +60,17 @@ fun ProjectsScreen(
                 searchQuery = it
                 viewModel.loadProjects(searchQuery.ifEmpty { null })
             },
-            label = "Buscar Obra",
+            label = "Buscar Proyecto",
             placeholder = "Buscar por código, nombre o ubicación..."
         )
 
         when (val state = uiState) {
             is ProjectsUiState.Loading -> {
-                TTLoading(text = "Cargando obras de construcción...")
+                TTLoading(text = "Cargando proyectos...")
             }
             is ProjectsUiState.Error -> {
                 TTEmptyState(
-                    title = "Error al consultar obras",
+                    title = "Error al consultar proyectos",
                     description = state.message,
                     actionLabel = "Reintentar",
                     onAction = { viewModel.loadProjects() }
@@ -80,8 +79,8 @@ fun ProjectsScreen(
             is ProjectsUiState.Success -> {
                 if (state.projects.isEmpty()) {
                     TTEmptyState(
-                        title = "Sin obras registradas",
-                        description = "No existen proyectos de construcción que coincidan con la búsqueda."
+                        title = "Sin proyectos registrados",
+                        description = "No existen proyectos que coincidan con la búsqueda."
                     )
                 } else {
                     LazyColumn(
@@ -120,13 +119,13 @@ fun ProjectCard(
                         text = "${project.code} · ${project.name}",
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Bold,
-                        color = TecodeTextPrimary
+                        color = STunWhite
                     )
                     if (!project.location.isNullOrEmpty()) {
                         Text(
                             text = "📍 ${project.location}",
                             fontSize = 12.sp,
-                            color = TecodeTextMuted
+                            color = STunSlateGray
                         )
                     }
                 }
@@ -140,7 +139,7 @@ fun ProjectCard(
                 Text(
                     text = project.description,
                     fontSize = 12.sp,
-                    color = TecodeTextSecondary
+                    color = STunSlateGray
                 )
             }
 
@@ -152,24 +151,24 @@ fun ProjectCard(
                     Text(
                         text = "Ejecutado: $${String.format("%.2f", project.executedAmount)}",
                         fontSize = 11.sp,
-                        color = TecodeTextSecondary
+                        color = STunSlateGray
                     )
                     Text(
                         text = "Presupuesto: $${String.format("%.2f", project.budget)} ($percentage%)",
                         fontSize = 11.sp,
                         fontWeight = FontWeight.Bold,
-                        color = TecodeAccent
+                        color = STunCyanAccent
                     )
                 }
 
                 LinearProgressIndicator(
-                    progress = progress,
+                    progress = { progress },
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(8.dp)
                         .clip(RoundedCornerShape(4.dp)),
-                    color = if (percentage > 90) TecodeError else TecodeAccent,
-                    trackColor = TecodeBorder,
+                    color = if (percentage > 90) STunError else STunCyanAccent,
+                    trackColor = STunDarkBorder,
                 )
             }
 
@@ -177,7 +176,7 @@ fun ProjectCard(
                 Text(
                     text = "👷 Responsable: ${project.managerName}",
                     fontSize = 11.sp,
-                    color = TecodeTextMuted
+                    color = STunSlateGray
                 )
             }
         }

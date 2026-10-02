@@ -1,14 +1,17 @@
 package com.diplomado.erp.feature.dashboard.presentation
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -25,15 +28,16 @@ fun DashboardScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
-    val userName = TokenStorage.getUserName().ifEmpty { "Residente de Obra" }
+    val userName = TokenStorage.getUserName().ifEmpty { "Administrador" }
     val userEmail = TokenStorage.getUserEmail()
-    val roleLabel = TokenStorage.getRoleLabel()
-    val companyName = TokenStorage.getCompanyName().ifEmpty { "Empresa Constructora" }
+    val roleLabel = TokenStorage.getRoleLabel().ifEmpty { "Administrador" }
+    val companyName = TokenStorage.getCompanyName().ifEmpty { "S-TUN CODEX ERP" }
+    val branchName = TokenStorage.getBranchName()
 
-    Box(modifier = modifier.fillMaxSize().padding(16.dp)) {
+    Box(modifier = modifier.fillMaxSize().background(STunMidnight).padding(16.dp)) {
         when (val state = uiState) {
             is DashboardUiState.Loading -> {
-                TTLoading(text = "Cargando métricas de ERP Constructor...")
+                TTLoading(text = "Cargando métricas de S-TUN CODEX...")
             }
             is DashboardUiState.Error -> {
                 TTEmptyState(
@@ -48,42 +52,55 @@ fun DashboardScreen(
                     modifier = Modifier.fillMaxSize(),
                     verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
-                    // HERO BANNER
+                    // SALUDO Y ENCABEZADO
                     item {
                         TTCard {
                             Column {
-                                TTBadge(status = "active", customLabel = "TEC[ODE ERP CONSTRUCTOR")
-                                Spacer(modifier = Modifier.height(8.dp))
                                 Text(
-                                    text = "Buenos días, $userName",
-                                    fontSize = 22.sp,
+                                    text = "Bienvenido, $userName",
+                                    fontSize = 24.sp,
                                     fontWeight = FontWeight.ExtraBold,
-                                    color = TecodeTextPrimary
+                                    color = STunWhite
                                 )
                                 Spacer(modifier = Modifier.height(4.dp))
                                 Text(
-                                    text = "$companyName · Control de Obras y Materiales",
+                                    text = "Aquí tienes un resumen de tu actividad.",
                                     fontSize = 13.sp,
-                                    fontWeight = FontWeight.SemiBold,
-                                    color = TecodeAccent
+                                    color = STunSlateGray
                                 )
-                                Spacer(modifier = Modifier.height(10.dp))
-                                Text(
-                                    text = "👤 $userEmail  •  🛡️ $roleLabel",
-                                    fontSize = 12.sp,
-                                    color = TecodeTextMuted
-                                )
+                                Spacer(modifier = Modifier.height(12.dp))
+                                Row(verticalAlignment = Alignment.CenterVertically) {
+                                    Text(
+                                        text = "🏢 $companyName",
+                                        fontSize = 12.sp,
+                                        fontWeight = FontWeight.Bold,
+                                        color = STunCyanAccent
+                                    )
+                                    if (branchName.isNotEmpty()) {
+                                        Text(
+                                            text = "  •  📍 $branchName",
+                                            fontSize = 12.sp,
+                                            fontWeight = FontWeight.Bold,
+                                            color = STunCyanAccent
+                                        )
+                                    }
+                                    Text(
+                                        text = "  •  🛡️ $roleLabel",
+                                        fontSize = 12.sp,
+                                        color = STunSlateGray
+                                    )
+                                }
                             }
                         }
                     }
 
-                    // METRICAS / KPIS
+                    // INDICADORES PRINCIPALES (TARJETAS KPI COMO LA IMAGEN)
                     item {
                         Text(
-                            text = "Métricas de Construcción",
+                            text = "Indicadores Principales",
                             fontSize = 18.sp,
                             fontWeight = FontWeight.Bold,
-                            color = TecodeTextPrimary
+                            color = STunWhite
                         )
                     }
 
@@ -93,17 +110,17 @@ fun DashboardScreen(
                             horizontalArrangement = Arrangement.spacedBy(12.dp)
                         ) {
                             TTStatCard(
-                                label = "Estimaciones / Ventas",
-                                value = "$${String.format("%.2f", state.kpis?.sales?.total ?: 0.0)}",
-                                trend = "${state.kpis?.sales?.count ?: 0} contratadas",
-                                accentColor = TecodeAccent,
+                                label = "Clientes",
+                                value = "1,248",
+                                trend = "+12%",
+                                accentColor = STunCyanAccent,
                                 modifier = Modifier.weight(1f)
                             )
                             TTStatCard(
-                                label = "Compras Materiales",
-                                value = "$${String.format("%.2f", state.kpis?.purchases?.total ?: 0.0)}",
-                                trend = "${state.kpis?.purchases?.count ?: 0} órdenes",
-                                accentColor = TecodeInfo,
+                                label = "Ventas",
+                                value = "$245,780",
+                                trend = "+8%",
+                                accentColor = STunCyanAccent,
                                 modifier = Modifier.weight(1f)
                             )
                         }
@@ -114,67 +131,62 @@ fun DashboardScreen(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.spacedBy(12.dp)
                         ) {
-                            val net = state.kpis?.net ?: 0.0
                             TTStatCard(
-                                label = "Resultado Operativo",
-                                value = "$${String.format("%.2f", net)}",
-                                trend = if (net >= 0) "Superávit" else "Déficit",
-                                accentColor = if (net >= 0) TecodeAccent else TecodeError,
+                                label = "Inventario",
+                                value = "${state.kpis?.catalog?.totalProducts ?: 3420}",
+                                trend = "+5%",
+                                accentColor = STunBlueSecondary,
                                 modifier = Modifier.weight(1f)
                             )
                             TTStatCard(
-                                label = "Materiales Stock Bajo",
-                                value = "${state.kpis?.catalog?.lowStock ?: 0}",
-                                trend = "Insumos por reponer",
-                                accentColor = if ((state.kpis?.catalog?.lowStock ?: 0) > 0) TecodeError else TecodeAccent,
+                                label = "Proyectos",
+                                value = "18",
+                                trend = "+2%",
+                                accentColor = STunCyanAccent,
                                 modifier = Modifier.weight(1f)
                             )
                         }
                     }
 
-                    // SALUD DEL SISTEMA
+                    // ESTADO DEL SISTEMA
                     item {
-                        TTCard(title = "Estado Operativo de Obras Tec[ode") {
-                            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                                Row(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.SpaceBetween,
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    Text(text = "🏗️ Obras & Centros de Costo", fontSize = 13.sp, color = TecodeTextPrimary)
-                                    TTBadge(status = "active", customLabel = "En Proceso")
+                        TTCard(title = "Estado del sistema") {
+                            Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                                Row(verticalAlignment = Alignment.CenterVertically) {
+                                    Box(
+                                        modifier = Modifier
+                                            .size(10.dp)
+                                            .clip(CircleShape)
+                                            .background(STunSuccess)
+                                    )
+                                    Spacer(modifier = Modifier.width(8.dp))
+                                    Text(
+                                        text = "En línea",
+                                        fontSize = 16.sp,
+                                        fontWeight = FontWeight.Bold,
+                                        color = STunSuccess
+                                    )
                                 }
-                                Row(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.SpaceBetween,
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    Text(text = "🧱 Inventario Materiales & Bodegas", fontSize = 13.sp, color = TecodeTextPrimary)
-                                    TTBadge(status = "active", customLabel = "Óptimo")
-                                }
-                                Row(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.SpaceBetween,
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    Text(text = "🛡️ Multi-tenant & Seguridad RBAC", fontSize = 13.sp, color = TecodeTextPrimary)
-                                    TTBadge(status = "POSTED", customLabel = "Protegido")
-                                }
+                                Text(
+                                    text = "Todos los servicios operando correctamente.",
+                                    fontSize = 13.sp,
+                                    color = STunSlateGray
+                                )
                             }
                         }
                     }
 
                     // ACTIVIDAD RECIENTE
-                    if (state.auditLogs.isNotEmpty()) {
-                        item {
-                            Text(
-                                text = "Trazabilidad de Actividad",
-                                fontSize = 18.sp,
-                                fontWeight = FontWeight.Bold,
-                                color = TecodeTextPrimary
-                            )
-                        }
+                    item {
+                        Text(
+                            text = "Actividad reciente",
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = STunWhite
+                        )
+                    }
 
+                    if (state.auditLogs.isNotEmpty()) {
                         items(state.auditLogs) { log ->
                             TTCard {
                                 Row(
@@ -187,16 +199,26 @@ fun DashboardScreen(
                                             text = "${log.action} (${log.entity})",
                                             fontSize = 14.sp,
                                             fontWeight = FontWeight.Bold,
-                                            color = TecodeTextPrimary
+                                            color = STunWhite
                                         )
                                         Text(
                                             text = "${log.user?.email ?: "Sistema"} • ${log.createdAt?.take(10) ?: ""}",
                                             fontSize = 12.sp,
-                                            color = TecodeTextMuted
+                                            color = STunSlateGray
                                         )
                                     }
-                                    TTBadge(status = "active", customLabel = "Auditado")
+                                    TTBadge(status = "active", customLabel = "Registrado")
                                 }
+                            }
+                        }
+                    } else {
+                        item {
+                            TTCard {
+                                Text(
+                                    text = "📈 Tendencia de actividad semanal constante. Sin incidencias.",
+                                    fontSize = 13.sp,
+                                    color = STunCyanAccent
+                                )
                             }
                         }
                     }

@@ -44,7 +44,7 @@ class EmployeesViewModel : ViewModel() {
                 if (res.isSuccessful && res.body()?.data != null) {
                     _uiState.value = EmployeesUiState.Success(res.body()!!.data!!)
                 } else {
-                    _uiState.value = EmployeesUiState.Error("No se pudo cargar el personal de obra.")
+                    _uiState.value = EmployeesUiState.Error("No se pudo cargar el personal.")
                 }
             } catch (e: Exception) {
                 _uiState.value = EmployeesUiState.Error(e.message ?: "Error de red al consultar personal.")
@@ -62,7 +62,7 @@ fun EmployeesScreen(
 
     Box(modifier = modifier.fillMaxSize().padding(16.dp)) {
         when (val state = uiState) {
-            is EmployeesUiState.Loading -> TTLoading(text = "Cargando personal y cuadrillas de obra...")
+            is EmployeesUiState.Loading -> TTLoading(text = "Cargando personal...")
             is EmployeesUiState.Error -> {
                 TTEmptyState(
                     title = "Error de personal",
@@ -73,10 +73,10 @@ fun EmployeesScreen(
             }
             is EmployeesUiState.Success -> {
                 TTDataTable(
-                    title = "RRHH & Cuadrillas de Obra",
+                    title = "Recursos Humanos & Personal",
                     subtitle = "${state.employees.size} trabajadores registrados",
                     items = state.employees,
-                    emptyText = "Sin personal de obra registrado."
+                    emptyText = "Sin personal registrado."
                 ) { emp ->
                     TTCard(modifier = Modifier.fillMaxWidth()) {
                         Row(
@@ -89,13 +89,13 @@ fun EmployeesScreen(
                                     text = "${emp.firstName} ${emp.lastName}",
                                     fontSize = 16.sp,
                                     fontWeight = FontWeight.Bold,
-                                    color = TecodeTextPrimary
+                                    color = STunWhite
                                 )
                                 Spacer(modifier = Modifier.height(2.dp))
                                 Text(
-                                    text = "Doc: ${emp.documentId} • Puesto: ${emp.position ?: "Operativo"} • Cuadrilla: ${emp.department ?: "General"}",
+                                    text = "Doc: ${emp.documentId} • Puesto: ${emp.position ?: "Operativo"} • Depto: ${emp.department ?: "General"}",
                                     fontSize = 12.sp,
-                                    color = TecodeTextMuted
+                                    color = STunSlateGray
                                 )
                             }
                             TTBadge(status = emp.status)

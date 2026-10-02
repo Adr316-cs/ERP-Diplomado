@@ -23,7 +23,7 @@ fun AuditScreen(
 
     Box(modifier = modifier.fillMaxSize().padding(16.dp)) {
         when (val state = uiState) {
-            is AuditUiState.Loading -> TTLoading(text = "Cargando bitácora inmutable de trazabilidad de obra...")
+            is AuditUiState.Loading -> TTLoading(text = "Cargando bitácora de trazabilidad...")
             is AuditUiState.Error -> {
                 TTEmptyState(
                     title = "Error de trazabilidad",
@@ -35,9 +35,9 @@ fun AuditScreen(
             is AuditUiState.Success -> {
                 TTDataTable(
                     title = "Trazabilidad & Auditoría",
-                    subtitle = "${state.logs.size} eventos inmutables de obra",
+                    subtitle = "${state.logs.size} eventos de auditoría registrados",
                     items = state.logs,
-                    emptyText = "Sin registros de auditoría registrados."
+                    emptyText = "Sin registros de auditoría."
                 ) { log ->
                     TTCard(modifier = Modifier.fillMaxWidth()) {
                         Row(
@@ -50,16 +50,16 @@ fun AuditScreen(
                                     text = "${log.action} · ${log.entity}",
                                     fontSize = 15.sp,
                                     fontWeight = FontWeight.Bold,
-                                    color = TecodeTextPrimary
+                                    color = STunWhite
                                 )
                                 Spacer(modifier = Modifier.height(2.dp))
                                 Text(
-                                    text = "Responsable: ${log.user?.email ?: "Sistema"} • Fecha: ${log.createdAt?.take(10) ?: "—"}",
+                                    text = "Usuario: ${log.user?.email ?: "Sistema"} • Fecha: ${log.createdAt?.take(10) ?: "—"}",
                                     fontSize = 12.sp,
-                                    color = TecodeTextMuted
+                                    color = STunSlateGray
                                 )
                             }
-                            TTBadge(status = "POSTED", customLabel = "Inmutable")
+                            TTBadge(status = "POSTED", customLabel = "Auditado")
                         }
                     }
                 }

@@ -9,29 +9,32 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
-private val TecodeDarkColorScheme = darkColorScheme(
-    primary = TecodeAccent,
-    onPrimary = TecodeTextDark,
-    primaryContainer = TecodePrimary,
-    onPrimaryContainer = TecodeTextPrimary,
-    secondary = TecodeInfo,
-    onSecondary = TecodeTextDark,
-    background = TecodeBackground,
-    onBackground = TecodeTextPrimary,
-    surface = TecodeSurface,
-    onSurface = TecodeTextPrimary,
-    surfaceVariant = TecodeCard,
-    onSurfaceVariant = TecodeTextSecondary,
-    outline = TecodeBorder,
-    error = TecodeError,
-    onError = TecodeTextPrimary
+private val STunCodexColorScheme = darkColorScheme(
+    primary = STunCyanAccent,
+    onPrimary = STunMidnight,
+    primaryContainer = STunStructure,
+    onPrimaryContainer = STunTextPrimary,
+    secondary = STunBlueSecondary,
+    onSecondary = STunTextPrimary,
+    secondaryContainer = STunSurfaceDark,
+    onSecondaryContainer = STunTextPrimary,
+    background = STunMidnight,
+    onBackground = STunTextPrimary,
+    surface = STunDarkBlue,
+    onSurface = STunTextPrimary,
+    surfaceVariant = STunSurfaceDark,
+    onSurfaceVariant = STunTextSecondary,
+    outline = STunDarkBorder,
+    outlineVariant = STunSilverBorder,
+    error = STunError,
+    onError = STunWhite
 )
 
 @Composable
 fun DiplomadoERPTheme(
     content: @Composable () -> Unit
 ) {
-    val colorScheme = TecodeDarkColorScheme
+    val colorScheme = STunCodexColorScheme
     val view = LocalView.current
 
     if (!view.isInEditMode) {

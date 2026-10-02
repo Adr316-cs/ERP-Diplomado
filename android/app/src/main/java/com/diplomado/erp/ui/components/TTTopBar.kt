@@ -2,7 +2,6 @@ package com.diplomado.erp.ui.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -26,36 +25,35 @@ fun TTTopBar(
     onLogoutClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val companyName = TokenStorage.getCompanyName()
+    val companyName = TokenStorage.getCompanyName().ifEmpty { "S-TUN CODEX" }
     val branchName = TokenStorage.getBranchName()
-    val userEmail = TokenStorage.getUserEmail()
 
     Row(
         modifier = modifier
             .fillMaxWidth()
             .height(60.dp)
-            .background(TecodeSurface)
-            .border(width = 0.5.dp, color = TecodeBorder)
+            .background(STunDarkBlue)
+            .border(width = 0.5.dp, color = STunDarkBorder)
             .padding(horizontal = 16.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        TecodeLogo(isLarge = false, showTagline = true)
+        STunCodexLogo(isLarge = false, showTagline = true)
 
         Row(verticalAlignment = Alignment.CenterVertically) {
             // Company Pill
             Box(
                 modifier = Modifier
                     .clip(RoundedCornerShape(100.dp))
-                    .background(TecodeCard)
-                    .border(1.dp, TecodeBorder, RoundedCornerShape(100.dp))
+                    .background(STunSurfaceDark)
+                    .border(1.dp, STunDarkBorder, RoundedCornerShape(100.dp))
                     .padding(horizontal = 10.dp, vertical = 4.dp)
             ) {
                 Text(
                     text = if (branchName.isNotEmpty()) "$companyName · $branchName" else companyName,
                     fontSize = 11.sp,
                     fontWeight = FontWeight.Bold,
-                    color = TecodeAccent
+                    color = STunCyanAccent
                 )
             }
 
@@ -67,12 +65,12 @@ fun TTTopBar(
                 modifier = Modifier
                     .size(36.dp)
                     .clip(CircleShape)
-                    .background(TecodeError.copy(alpha = 0.15f))
+                    .background(STunError.copy(alpha = 0.15f))
             ) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.ExitToApp,
                     contentDescription = "Cerrar sesión",
-                    tint = TecodeError,
+                    tint = STunError,
                     modifier = Modifier.size(20.dp)
                 )
             }

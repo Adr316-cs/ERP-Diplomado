@@ -34,20 +34,22 @@ fun TTTextField(
     var passwordVisible by remember { mutableStateOf(!isPassword) }
 
     Column(modifier = modifier.fillMaxWidth()) {
-        Text(
-            text = label,
-            fontSize = 13.sp,
-            color = TecodeTextSecondary,
-            style = MaterialTheme.typography.bodyMedium
-        )
-        Spacer(modifier = Modifier.height(4.dp))
+        if (label.isNotEmpty()) {
+            Text(
+                text = label,
+                fontSize = 13.sp,
+                color = STunSlateGray,
+                style = MaterialTheme.typography.bodyMedium
+            )
+            Spacer(modifier = Modifier.height(4.dp))
+        }
 
         OutlinedTextField(
             value = value,
             onValueChange = onValueChange,
             modifier = Modifier.fillMaxWidth(),
             enabled = enabled,
-            placeholder = { Text(text = placeholder, color = TecodeTextMuted) },
+            placeholder = { Text(text = placeholder, color = STunSlateGray) },
             singleLine = singleLine,
             isError = error != null,
             keyboardOptions = keyboardOptions,
@@ -58,20 +60,20 @@ fun TTTextField(
                         Icon(
                             imageVector = if (passwordVisible) Icons.Default.VisibilityOff else Icons.Default.Visibility,
                             contentDescription = "Mostrar contraseña",
-                            tint = TecodeTextMuted
+                            tint = STunCyanAccent
                         )
                     }
                 }
             } else null,
             shape = RoundedCornerShape(8.dp),
             colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = TecodePrimary,
-                unfocusedBorderColor = TecodeBorder,
-                errorBorderColor = TecodeError,
-                focusedContainerColor = TecodeSurface,
-                unfocusedContainerColor = TecodeSurface,
-                focusedTextColor = TecodeTextPrimary,
-                unfocusedTextColor = TecodeTextPrimary
+                focusedBorderColor = STunCyanAccent,
+                unfocusedBorderColor = STunDarkBorder,
+                errorBorderColor = STunError,
+                focusedContainerColor = STunSurfaceDark,
+                unfocusedContainerColor = STunSurfaceDark,
+                focusedTextColor = STunWhite,
+                unfocusedTextColor = STunWhite
             )
         )
 
@@ -79,7 +81,7 @@ fun TTTextField(
             Spacer(modifier = Modifier.height(4.dp))
             Text(
                 text = error,
-                color = TecodeError,
+                color = STunError,
                 fontSize = 12.sp,
                 style = MaterialTheme.typography.bodySmall
             )

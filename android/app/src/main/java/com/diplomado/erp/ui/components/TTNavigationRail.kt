@@ -30,9 +30,9 @@ fun TTNavigationRail(
 
     NavigationRail(
         modifier = modifier,
-        containerColor = TecodeSurface,
+        containerColor = STunDarkBlue,
         header = {
-            TecodeLogoIcon(sizeDp = 38)
+            STunCodexLogoIcon(sizeDp = 38)
         }
     ) {
         items.forEach { item ->
@@ -45,18 +45,18 @@ fun TTNavigationRail(
                     Icon(
                         imageVector = item.icon,
                         contentDescription = item.title,
-                        tint = if (selected) TecodeAccent else TecodeTextMuted
+                        tint = if (selected) STunCyanAccent else STunTextMuted
                     )
                 },
                 label = {
                     Text(
                         text = item.title,
                         fontSize = 10.sp,
-                        color = if (selected) TecodeAccent else TecodeTextMuted
+                        color = if (selected) STunCyanAccent else STunTextMuted
                     )
                 },
                 colors = NavigationRailItemDefaults.colors(
-                    indicatorColor = TecodeAccent.copy(alpha = 0.15f)
+                    indicatorColor = STunCyanAccent.copy(alpha = 0.15f)
                 )
             )
         }

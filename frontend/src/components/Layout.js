@@ -18,30 +18,30 @@ import {
 } from '../design-system/tokens';
 import { TTAvatar, TTBreadcrumb, TTSearch } from '../design-system/components';
 import { useNav } from '../nav/RouterContext';
-import { TecodeLogo } from './TecodeLogo';
+import { STunCodexLogo } from './STunCodexLogo';
 
 /**
- * Categorías de Menú TECTODE ERP
+ * Categorías de Menú S-TUN CODEX ERP
  */
 export const MENU_CATEGORIES = [
   {
     category: 'INICIO',
     items: [
-      { route: 'home', label: 'Dashboard', icon: '⚡', permission: null },
+      { route: 'home', label: 'Inicio', icon: '⚡', permission: null },
     ],
   },
   {
-    category: 'OPERACIONES',
+    category: 'MÓDULOS',
     items: [
       { route: 'products', label: 'Productos', icon: '📦', permission: 'products.read' },
       { route: 'warehouses', label: 'Almacenes', icon: '🏬', permission: 'warehouses.read' },
-      { route: 'stock', label: 'Existencias', icon: '📊', permission: 'inventory.read' },
+      { route: 'stock', label: 'Inventario', icon: '📊', permission: 'inventory.read' },
       { route: 'movements', label: 'Movimientos', icon: '🔄', permission: 'inventory.read' },
-      { route: 'counts', label: 'Inventarios Físicos', icon: '📋', permission: 'inventory.read' },
+      { route: 'counts', label: 'Conteos Físicos', icon: '📋', permission: 'inventory.read' },
       { route: 'suppliers', label: 'Proveedores', icon: '🏢', permission: 'suppliers.read' },
-      { route: 'purchaseOrders', label: 'Órdenes de Compra', icon: '🛒', permission: 'purchases.read' },
+      { route: 'purchaseOrders', label: 'Compras', icon: '🛒', permission: 'purchases.read' },
       { route: 'customers', label: 'Clientes', icon: '👥', permission: 'customers.read' },
-      { route: 'salesOrders', label: 'Pedidos de Venta', icon: '🏷️', permission: 'sales.orders.read' },
+      { route: 'salesOrders', label: 'Ventas', icon: '🏷️', permission: 'sales.orders.read' },
     ],
   },
   {
@@ -58,9 +58,9 @@ export const MENU_CATEGORIES = [
     category: 'NEGOCIO',
     items: [
       { route: 'leads', label: 'CRM / Leads', icon: '🎯', permission: 'crm.read' },
-      { route: 'employees', label: 'RRHH / Empleados', icon: '👔', permission: 'hr.read' },
+      { route: 'employees', label: 'Recursos Humanos', icon: '👔', permission: 'hr.read' },
       { route: 'boms', label: 'Listas BOM', icon: '⚙️', permission: 'production.read' },
-      { route: 'productionOrders', label: 'Órdenes Producción', icon: '🏭', permission: 'production.read' },
+      { route: 'productionOrders', label: 'Producción', icon: '🏭', permission: 'production.read' },
     ],
   },
   {
@@ -69,12 +69,12 @@ export const MENU_CATEGORIES = [
       { route: 'branches', label: 'Sucursales', icon: '📍', permission: 'branches.read' },
       { route: 'users', label: 'Usuarios', icon: '👤', permission: 'users.read' },
       { route: 'roles', label: 'Roles y Permisos', icon: '🛡️', permission: 'roles.read' },
-      { route: 'audit', label: 'Auditoría', icon: '👁️', permission: 'audit.read' },
+      { route: 'audit', label: 'Configuración / Auditoría', icon: '👁️', permission: 'audit.read' },
     ],
   },
 ];
 
-// Compatibilidad hacia atrás para HomeScreen u otros módulos
+// Compatibilidad hacia atrás
 export const MENU = MENU_CATEGORIES.map((cat) => ({
   section: cat.category,
   items: cat.items,
@@ -93,21 +93,18 @@ export default function Layout({ children }) {
   const { isMobile, isTablet } = getResponsiveLayout(width);
   const { company, user, role, branch } = session || {};
 
-  // Forzar colapso en Tablet
   const isSidebarCollapsed = isTablet || collapsed;
 
-  // Filtrado RBAC estricto
   const filteredCategories = MENU_CATEGORIES.map((cat) => ({
     ...cat,
     items: cat.items.filter((item) => !item.permission || can(item.permission)),
   })).filter((cat) => cat.items.length > 0);
 
-  // Mapeo para Breadcrumb
   const currentItem = MENU_CATEGORIES.flatMap((c) => c.items).find((i) => i.route === route.name);
   const currentCategory = MENU_CATEGORIES.find((c) => c.items.some((i) => i.route === route.name));
 
   const breadcrumbs = [
-    { label: 'Tec[ode', onPress: () => go('home') },
+    { label: 'S-Tun Codex', onPress: () => go('home') },
     ...(currentCategory ? [{ label: currentCategory.category }] : []),
     ...(currentItem ? [{ label: currentItem.label }] : []),
   ];
@@ -174,13 +171,13 @@ export default function Layout({ children }) {
             <TTSearch
               value={globalSearch}
               onChangeText={setGlobalSearch}
-              placeholder="Buscar en Tec[ode ERP…"
+              placeholder="Buscar en el sistema…"
               style={styles.globalSearch}
             />
           ) : null}
 
           <Pressable style={styles.badgeBox}>
-            <Text style={styles.badgeCompany}>{company?.name || 'Tec[ode'}</Text>
+            <Text style={styles.badgeCompany}>{company?.name || 'S-TUN CODEX'}</Text>
             {branch ? <Text style={styles.badgeBranch}> · {branch.name}</Text> : null}
           </Pressable>
 
@@ -196,7 +193,7 @@ export default function Layout({ children }) {
                   {user?.name} {user?.lastName || ''}
                 </Text>
                 <Text style={styles.userRole} numberOfLines={1}>
-                  {role?.label || role?.code || 'Usuario'}
+                  {role?.label || role?.code || 'Administrador'}
                 </Text>
               </View>
             ) : null}
@@ -213,7 +210,7 @@ export default function Layout({ children }) {
               <View style={styles.dropdownHeader}>
                 <Text style={styles.dropdownTitle}>{user?.name} {user?.lastName || ''}</Text>
                 <Text style={styles.dropdownSub}>{user?.email}</Text>
-                <Text style={styles.dropdownRole}>Rol: {role?.label || role?.code || 'Sin Rol'}</Text>
+                <Text style={styles.dropdownRole}>Rol: {role?.label || role?.code || 'Administrador'}</Text>
               </View>
 
               <Pressable
@@ -258,7 +255,7 @@ export default function Layout({ children }) {
         {!isMobile ? (
           <View style={[styles.sidebar, isSidebarCollapsed && styles.sidebarCollapsed]}>
             <View style={styles.brandHeader}>
-              <TecodeLogo size="md" showTag={!isSidebarCollapsed} />
+              <STunCodexLogo size="md" showTag={!isSidebarCollapsed} />
             </View>
 
             <ScrollView style={styles.sidebarNav} showsVerticalScrollIndicator={false}>
@@ -274,15 +271,7 @@ export default function Layout({ children }) {
               <Pressable style={styles.drawerOverlay} onPress={() => setMobileDrawerOpen(false)} />
               <View style={styles.mobileDrawer}>
                 <View style={styles.drawerHeader}>
-                  <View style={styles.brandHeader}>
-                    <View style={styles.brandLogoBox}>
-                      <Text style={styles.brandLogoText}>T</Text>
-                    </View>
-                    <View>
-                      <Text style={styles.brandName}>Tec[ode</Text>
-                      <Text style={styles.brandTag}>ERP Enterprise</Text>
-                    </View>
-                  </View>
+                  <STunCodexLogo size="md" showTag={true} />
                   <Pressable onPress={() => setMobileDrawerOpen(false)}>
                     <Text style={styles.closeDrawerText}>✕</Text>
                   </Pressable>
@@ -308,7 +297,7 @@ export default function Layout({ children }) {
 const styles = StyleSheet.create({
   shell: {
     flex: 1,
-    backgroundColor: COLORS.background,
+    backgroundColor: COLORS.backgroundDark,
   },
 
   // Header
@@ -317,8 +306,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: SPACING.lg,
-    height: 58,
-    backgroundColor: COLORS.surface,
+    height: 60,
+    backgroundColor: COLORS.background,
     borderBottomWidth: 1,
     borderBottomColor: COLORS.border,
     gap: SPACING.md,
@@ -336,8 +325,8 @@ const styles = StyleSheet.create({
     gap: SPACING.md,
   },
   iconBtn: {
-    width: 36,
-    height: 36,
+    width: 38,
+    height: 38,
     borderRadius: RADIUS.md,
     backgroundColor: COLORS.card,
     borderWidth: 1,
@@ -346,7 +335,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   iconBtnText: {
-    color: COLORS.textSecondary,
+    color: COLORS.textPrimary,
     fontSize: 15,
   },
   backBtn: {
@@ -358,12 +347,12 @@ const styles = StyleSheet.create({
     paddingVertical: SPACING.xs + 2,
   },
   backBtnText: {
-    color: COLORS.textSecondary,
+    color: COLORS.accent,
     fontSize: TYPOGRAPHY.fontSize.xs + 1,
     fontWeight: TYPOGRAPHY.fontWeight.semibold,
   },
   globalSearch: {
-    maxWidth: 260,
+    maxWidth: 280,
   },
   badgeBox: {
     flexDirection: 'row',
@@ -373,7 +362,7 @@ const styles = StyleSheet.create({
     borderColor: COLORS.border,
     borderRadius: RADIUS.pill,
     paddingHorizontal: SPACING.md,
-    paddingVertical: SPACING.xs + 1,
+    paddingVertical: SPACING.xs + 2,
   },
   badgeCompany: {
     color: COLORS.accent,
@@ -381,7 +370,7 @@ const styles = StyleSheet.create({
     fontWeight: TYPOGRAPHY.fontWeight.bold,
   },
   badgeBranch: {
-    color: COLORS.textMuted,
+    color: COLORS.textSecondary,
     fontSize: TYPOGRAPHY.fontSize.xs,
   },
   userMenuTrigger: {
@@ -405,12 +394,12 @@ const styles = StyleSheet.create({
     maxWidth: 120,
   },
   userRole: {
-    color: COLORS.textMuted,
+    color: COLORS.accent,
     fontSize: 10,
     maxWidth: 120,
   },
   caret: {
-    color: COLORS.textMuted,
+    color: COLORS.textSecondary,
     fontSize: 11,
     marginRight: 4,
   },
@@ -420,17 +409,18 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'transparent',
     alignItems: 'flex-end',
-    paddingTop: 60,
+    paddingTop: 62,
     paddingRight: 16,
   },
   userDropdown: {
-    width: 240,
-    backgroundColor: COLORS.cardElevated,
+    width: 250,
+    backgroundColor: COLORS.card,
     borderWidth: 1,
     borderColor: COLORS.border,
     borderRadius: RADIUS.lg,
     padding: SPACING.xs,
     gap: 2,
+    boxShadow: '0 8px 24px rgba(0, 0, 0, 0.6)',
   },
   dropdownHeader: {
     padding: SPACING.md,
@@ -444,13 +434,14 @@ const styles = StyleSheet.create({
     fontSize: TYPOGRAPHY.fontSize.sm,
   },
   dropdownSub: {
-    color: COLORS.textMuted,
+    color: COLORS.textSecondary,
     fontSize: TYPOGRAPHY.fontSize.xs,
   },
   dropdownRole: {
     color: COLORS.accent,
     fontSize: TYPOGRAPHY.fontSize.xs,
     marginTop: 4,
+    fontWeight: TYPOGRAPHY.fontWeight.bold,
   },
   dropdownItem: {
     paddingHorizontal: SPACING.md,
@@ -458,12 +449,12 @@ const styles = StyleSheet.create({
     borderRadius: RADIUS.sm,
   },
   dropdownItemText: {
-    color: COLORS.textSecondary,
+    color: COLORS.textPrimary,
     fontSize: TYPOGRAPHY.fontSize.sm,
     fontWeight: TYPOGRAPHY.fontWeight.medium,
   },
   dropdownLogout: {
-    backgroundColor: `${COLORS.error}15`,
+    backgroundColor: `${COLORS.error}20`,
     marginTop: SPACING.xs,
   },
   logoutText: {
@@ -481,7 +472,7 @@ const styles = StyleSheet.create({
   // Sidebar
   sidebar: {
     width: 240,
-    backgroundColor: COLORS.surface,
+    backgroundColor: COLORS.background,
     borderRightWidth: 1,
     borderRightColor: COLORS.border,
     paddingVertical: SPACING.md,
@@ -490,43 +481,9 @@ const styles = StyleSheet.create({
     width: 72,
   },
   brandHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: SPACING.md,
     paddingHorizontal: SPACING.lg,
     marginBottom: SPACING.lg,
   },
-  brandLogoBox: {
-    width: 36,
-    height: 36,
-    borderRadius: RADIUS.md,
-    backgroundColor: COLORS.primary,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  brandLogoText: {
-    color: COLORS.textPrimary,
-    fontWeight: '900',
-    fontSize: 20,
-    fontFamily: TYPOGRAPHY.fontFamily.display,
-  },
-  brandTitleArea: {
-    gap: 1,
-  },
-  brandName: {
-    color: COLORS.textPrimary,
-    fontSize: TYPOGRAPHY.fontSize.lg,
-    fontWeight: TYPOGRAPHY.fontWeight.extrabold,
-    fontFamily: TYPOGRAPHY.fontFamily.display,
-    letterSpacing: 0.5,
-  },
-  brandTag: {
-    color: COLORS.accent,
-    fontSize: 10,
-    fontWeight: TYPOGRAPHY.fontWeight.bold,
-    letterSpacing: 0.5,
-  },
-
   sidebarNav: {
     flex: 1,
     paddingHorizontal: SPACING.sm,
@@ -538,9 +495,9 @@ const styles = StyleSheet.create({
   navCategoryTitle: {
     fontSize: 10,
     fontWeight: TYPOGRAPHY.fontWeight.bold,
-    color: COLORS.textMuted,
+    color: COLORS.accent,
     textTransform: 'uppercase',
-    letterSpacing: 0.8,
+    letterSpacing: 1.1,
     paddingHorizontal: SPACING.md,
     marginBottom: SPACING.xs,
   },
@@ -557,12 +514,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 0,
   },
   navItemActive: {
-    backgroundColor: `${COLORS.accent}15`,
+    backgroundColor: COLORS.cardElevated,
     borderWidth: 1,
-    borderColor: `${COLORS.accent}40`,
+    borderColor: COLORS.accent,
   },
   navItemHovered: {
-    backgroundColor: 'rgba(255, 255, 255, 0.04)',
+    backgroundColor: 'rgba(58, 123, 213, 0.15)',
   },
   navIcon: {
     fontSize: 16,
@@ -584,7 +541,7 @@ const styles = StyleSheet.create({
   // Content Area
   content: {
     flex: 1,
-    backgroundColor: COLORS.background,
+    backgroundColor: COLORS.backgroundDark,
   },
   contentInner: {
     padding: SPACING.xl,
@@ -602,7 +559,7 @@ const styles = StyleSheet.create({
   },
   mobileDrawer: {
     width: 280,
-    backgroundColor: COLORS.surface,
+    backgroundColor: COLORS.background,
     height: '100%',
     paddingVertical: SPACING.lg,
     paddingHorizontal: SPACING.md,
@@ -617,7 +574,7 @@ const styles = StyleSheet.create({
     marginBottom: SPACING.md,
   },
   closeDrawerText: {
-    color: COLORS.textMuted,
+    color: COLORS.textSecondary,
     fontSize: 20,
     padding: SPACING.xs,
   },

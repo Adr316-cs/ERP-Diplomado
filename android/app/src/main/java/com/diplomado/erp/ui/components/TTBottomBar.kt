@@ -13,12 +13,12 @@ import com.diplomado.erp.ui.theme.*
 
 sealed class NavItem(val route: String, val title: String, val icon: ImageVector, val permission: String?) {
     data object Dashboard : NavItem("dashboard", "Inicio", Icons.Default.Bolt, null)
-    data object Projects : NavItem("projects", "Mis Obras", Icons.Default.Apartment, "projects.read")
-    data object Products : NavItem("products", "Materiales", Icons.Default.Category, "products.read")
-    data object Stock : NavItem("stock", "Existencias", Icons.Default.BarChart, "inventory.read")
+    data object Projects : NavItem("projects", "Proyectos", Icons.Default.Apartment, "projects.read")
+    data object Products : NavItem("products", "Productos", Icons.Default.Category, "products.read")
+    data object Stock : NavItem("stock", "Inventario", Icons.Default.BarChart, "inventory.read")
     data object Purchases : NavItem("purchases", "Compras", Icons.Default.ShoppingCart, "purchases.read")
     data object Sales : NavItem("sales", "Ventas", Icons.Default.LocalOffer, "sales.orders.read")
-    data object Finance : NavItem("finance", "Gastos", Icons.Default.AccountBalance, "finance.accounts.read")
+    data object Finance : NavItem("finance", "Finanzas", Icons.Default.AccountBalance, "finance.accounts.read")
     data object More : NavItem("more", "Menú", Icons.Default.Menu, null)
 }
 
@@ -41,11 +41,11 @@ fun TTBottomBar(
 
     val items = allItems.filter { item ->
         item.permission == null || PermissionChecker.hasPermission(item.permission)
-    }.take(5) // Máximo 5 ítems en BottomBar
+    }.take(5)
 
     NavigationBar(
         modifier = modifier,
-        containerColor = TecodeSurface,
+        containerColor = STunDarkBlue,
         tonalElevation = 8.dp
     ) {
         items.forEach { item ->
@@ -58,18 +58,18 @@ fun TTBottomBar(
                     Icon(
                         imageVector = item.icon,
                         contentDescription = item.title,
-                        tint = if (selected) TecodeAccent else TecodeTextMuted
+                        tint = if (selected) STunCyanAccent else STunTextMuted
                     )
                 },
                 label = {
                     Text(
                         text = item.title,
                         fontSize = 10.sp,
-                        color = if (selected) TecodeAccent else TecodeTextMuted
+                        color = if (selected) STunCyanAccent else STunTextMuted
                     )
                 },
                 colors = NavigationBarItemDefaults.colors(
-                    indicatorColor = TecodeAccent.copy(alpha = 0.15f)
+                    indicatorColor = STunCyanAccent.copy(alpha = 0.15f)
                 )
             )
         }

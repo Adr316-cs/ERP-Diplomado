@@ -13,25 +13,22 @@ import {
   TYPOGRAPHY,
 } from '../../design-system/tokens';
 import { TTBadge, TTButton, TTCard } from '../../design-system/components';
-import { TecodeLogo } from '../../components/TecodeLogo';
+import { STunCodexLogo } from '../../components/STunCodexLogo';
 
 /**
- * LandingScreen - Landing Page Pública TECTODE ERP
- * Estética Tech / Gaming / SaaS Premium
+ * LandingScreen - Landing Page Pública S-TUN CODEX ERP
  */
 export default function LandingScreen({ onGoLogin }) {
-  const [activeTab, setActiveTab] = useState('ERP');
-
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
       {/* NAVBAR */}
       <View style={styles.navbar}>
         <View style={styles.navBrand}>
-          <TecodeLogo size="md" />
+          <STunCodexLogo size="md" />
         </View>
 
         <View style={styles.navLinks}>
-          <Text style={styles.navLink}>Productos</Text>
+          <Text style={styles.navLink}>Módulos</Text>
           <Text style={styles.navLink}>Soluciones</Text>
           <Text style={styles.navLink}>Tecnología</Text>
           <Text style={styles.navLink}>Empresa</Text>
@@ -50,23 +47,23 @@ export default function LandingScreen({ onGoLogin }) {
       {/* HERO SECTION */}
       <View style={styles.heroSection}>
         <View style={styles.heroBadgeBox}>
-          <TTBadge value="active" label="TEC[ODE ENTERPRISE 2026" variant="accent" />
+          <TTBadge value="active" label="S-TUN CODEX · INTELLIGENT ERP SOLUTIONS" variant="accent" />
         </View>
 
         <Text style={styles.heroTitle}>
-          GESTIONA. <Text style={styles.heroHighlight}>CRECE.</Text> DOMINA.
+          Tu empresa, en el <Text style={styles.heroHighlight}>siguiente nivel.</Text>
         </Text>
 
         <Text style={styles.heroSubtitle}>
-          El ecosistema tecnológico definitivo para operar, controlar y escalar tu empresa con velocidad y precisión sin precedentes.
+          INTEGRA · AUTOMATIZA · CRECE. La plataforma inteligente para gestionar ventas, compras, inventarios, finanzas y operaciones.
         </Text>
 
         <View style={styles.heroCtaRow}>
           <TTButton variant="primary" size="lg" onPress={onGoLogin} style={styles.ctaMain}>
-            Comenzar Ahora →
+            Iniciar Sesión →
           </TTButton>
           <TTButton variant="secondary" size="lg" onPress={onGoLogin}>
-            Conocer Tec[ode
+            Conocer Módulos
           </TTButton>
         </View>
 
@@ -74,11 +71,11 @@ export default function LandingScreen({ onGoLogin }) {
         <View style={styles.trustGrid}>
           <View style={styles.trustItem}>
             <Text style={styles.trustNumber}>99.99%</Text>
-            <Text style={styles.trustLabel}>Disponibilidad SLA</Text>
+            <Text style={styles.trustLabel}>SLA Disponibilidad</Text>
           </View>
           <View style={styles.trustItem}>
             <Text style={styles.trustNumber}>Multi-tenant</Text>
-            <Text style={styles.trustLabel}>Aislamiento Robusto</Text>
+            <Text style={styles.trustLabel}>Seguridad RBAC</Text>
           </View>
           <View style={styles.trustItem}>
             <Text style={styles.trustNumber}>22+</Text>
@@ -86,151 +83,74 @@ export default function LandingScreen({ onGoLogin }) {
           </View>
           <View style={styles.trustItem}>
             <Text style={styles.trustNumber}>100%</Text>
-            <Text style={styles.trustLabel}>Control en Tiempo Real</Text>
+            <Text style={styles.trustLabel}>Trazabilidad en Vivo</Text>
           </View>
         </View>
       </View>
 
       {/* ECOSISTEMA SECTION */}
       <View style={styles.section}>
-        <Text style={styles.sectionPre}>ECOSISTEMA INTEGRADO</Text>
-        <Text style={styles.sectionTitle}>UN ECOSISTEMA. INFINITAS FORMAS DE CRECER.</Text>
+        <Text style={styles.sectionPre}>S-TUN CODEX ECOSISTEMA</Text>
+        <Text style={styles.sectionTitle}>CONSTRUIDO PARA EL FUTURO</Text>
         <Text style={styles.sectionSub}>
-          Módulos diseñados para sincronizarse entre sí automáticamente sin silos de información.
+          Arquitectura modular que conecta todas las áreas de tu empresa de forma transparente.
         </Text>
 
         <View style={styles.ecosystemGrid}>
-          <TTCard title="⚡ ERP CORE" subtitle="Gestión Central & RBAC" style={styles.ecoCard}>
+          <TTCard title="⚡ CORE & AUDITORÍA" subtitle="Empresas & Permisos" style={styles.ecoCard}>
             <Text style={styles.ecoText}>
-              Control de roles, permisos finos, sucursales y auditoría inmutable de cada transacción.
+              Control fino de usuarios, roles, sucursales y trazabilidad completa de cada acción.
             </Text>
           </TTCard>
 
-          <TTCard title="📦 INVENTARIO" subtitle="Multidepósito & Trazabilidad" style={styles.ecoCard}>
+          <TTCard title="📦 INVENTARIOS" subtitle="Multialmacén & Stock" style={styles.ecoCard}>
             <Text style={styles.ecoText}>
-              Kardex en tiempo real, alertas de stock mínimo y trazabilidad de movimientos.
+              Kardex en tiempo real, conteos físicos, movimientos y alertas automáticas.
             </Text>
           </TTCard>
 
           <TTCard title="💰 FINANZAS" subtitle="Cuentas & Presupuestos" style={styles.ecoCard}>
             <Text style={styles.ecoText}>
-              Ingresos, gastos, presupuestos por categoría y estados financieros automáticos.
+              Ingresos, egresos, presupuestos y balance en tiempo real por centro de costo.
             </Text>
           </TTCard>
 
-          <TTCard title="🎯 CRM" subtitle="Leads & Conversión" style={styles.ecoCard}>
+          <TTCard title="🎯 CRM & PROYECTOS" subtitle="Leads & Seguimiento" style={styles.ecoCard}>
             <Text style={styles.ecoText}>
-              Embudo de oportunidades comerciales y seguimiento de interacción con clientes.
+              Gestión de clientes, oportunidades comerciales y avance de proyectos.
             </Text>
           </TTCard>
 
-          <TTCard title="⚙️ PRODUCCIÓN" subtitle="BOM & Órdenes de Trabajo" style={styles.ecoCard}>
+          <TTCard title="⚙️ PRODUCCIÓN" subtitle="Listas BOM & Trabajo" style={styles.ecoCard}>
             <Text style={styles.ecoText}>
-              Explosión de insumos de materiales (BOM) y consumo directo de materias primas.
+              Explosión de insumos de materiales (BOM) y consumo directo de órdenes.
             </Text>
           </TTCard>
 
-          <TTCard title="👔 RRHH" subtitle="Gestión de Personal" style={styles.ecoCard}>
+          <TTCard title="👔 RECURSOS HUMANOS" subtitle="Empleados & Departamentos" style={styles.ecoCard}>
             <Text style={styles.ecoText}>
-              Expediente digital de empleados, departamentos y ciclos de vida de colaboradores.
+              Expedientes digitales de personal, cargos y administración de talento.
             </Text>
           </TTCard>
-        </View>
-      </View>
-
-      {/* PRODUCT MOCKUP DEMO SECTION */}
-      <View style={styles.section}>
-        <Text style={styles.sectionPre}>EXPERIENCIA DE PRODUCTO</Text>
-        <Text style={styles.sectionTitle}>Diseñado para el siguiente movimiento.</Text>
-
-        <View style={styles.productMockupBox}>
-          <View style={styles.mockupHeader}>
-            <View style={styles.mockupDots}>
-              <View style={[styles.dot, styles.dotRed]} />
-              <View style={[styles.dot, styles.dotYellow]} />
-              <View style={[styles.dot, styles.dotGreen]} />
-            </View>
-            <Text style={styles.mockupUrl}>https://tec-ode.app/dashboard</Text>
-          </View>
-
-          <View style={styles.mockupBody}>
-            <View style={styles.mockupKpis}>
-              <View style={styles.mockKpi}>
-                <Text style={styles.mockKpiLabel}>Ventas del Mes</Text>
-                <Text style={styles.mockKpiVal}>$128,450.00</Text>
-                <Text style={styles.mockKpiTrend}>↑ +12.4% este periodo</Text>
-              </View>
-              <View style={styles.mockKpi}>
-                <Text style={styles.mockKpiLabel}>Resultado Neto</Text>
-                <Text style={styles.mockKpiVal}>$94,200.00</Text>
-                <Text style={styles.mockKpiTrend}>↑ +8.1% este periodo</Text>
-              </View>
-              <View style={styles.mockKpi}>
-                <Text style={styles.mockKpiLabel}>Salud Inventario</Text>
-                <Text style={[styles.mockKpiVal, { color: COLORS.accent }]}>87% Saludable</Text>
-                <Text style={styles.mockKpiTrend}>Optimizado</Text>
-              </View>
-            </View>
-          </View>
-        </View>
-      </View>
-
-      {/* VENTAJAS COMPETITIVAS */}
-      <View style={styles.section}>
-        <Text style={styles.sectionPre}>POR QUÉ TEC[ODE</Text>
-        <Text style={styles.sectionTitle}>Ventajas estratégicas para tu operación.</Text>
-
-        <View style={styles.advantagesGrid}>
-          <View style={styles.advantageItem}>
-            <Text style={styles.advIcon}>🕹️</Text>
-            <Text style={styles.advTitle}>Control Total</Text>
-            <Text style={styles.advText}>
-              Visibilidad completa de stock, dinero y operaciones desde cualquier dispositivo.
-            </Text>
-          </View>
-
-          <View style={styles.advantageItem}>
-            <Text style={styles.advIcon}>⚡</Text>
-            <Text style={styles.advTitle}>Velocidad Instantánea</Text>
-            <Text style={styles.advText}>
-              Arquitectura ultra-rápida construida sobre React Native y APIs de baja latencia.
-            </Text>
-          </View>
-
-          <View style={styles.advantageItem}>
-            <Text style={styles.advIcon}>🤖</Text>
-            <Text style={styles.advTitle}>Automatización</Text>
-            <Text style={styles.advText}>
-              Validaciones estrictas y conciliaciones atómicas para evitar errores humanos.
-            </Text>
-          </View>
-
-          <View style={styles.advantageItem}>
-            <Text style={styles.advIcon}>📈</Text>
-            <Text style={styles.advTitle}>Escalabilidad</Text>
-            <Text style={styles.advText}>
-              Diseñado para soportar múltiples empresas, sucursales y miles de transacciones.
-            </Text>
-          </View>
         </View>
       </View>
 
       {/* CTA FOOTER SECTION */}
       <View style={styles.ctaSection}>
-        <Text style={styles.ctaPre}>UN SOLO ECOSISTEMA</Text>
-        <Text style={styles.ctaTitle}>TU NEGOCIO. UN SOLO ECOSISTEMA.</Text>
+        <Text style={styles.ctaPre}>S-TUN CODEX</Text>
+        <Text style={styles.ctaTitle}>CONSTRUIDO PARA EL FUTURO</Text>
         <Text style={styles.ctaSub}>
-          Eleva la gestión de tu empresa con la plataforma más moderna del mercado.
+          Transforma la operación de tu empresa con la mejor experiencia visual e intuitiva.
         </Text>
 
         <TTButton variant="primary" size="lg" onPress={onGoLogin} style={styles.ctaBtn}>
-          Comenzar Ahora →
+          Acceder al Sistema →
         </TTButton>
       </View>
 
       {/* FOOTER */}
       <View style={styles.footer}>
-        <Text style={styles.footerBrand}>Tec[ode ERP Enterprise © 2026</Text>
+        <Text style={styles.footerBrand}>S-TUN CODEX — INTELLIGENT ERP SOLUTIONS © 2026</Text>
         <Text style={styles.footerSub}>Todos los derechos reservados.</Text>
       </View>
     </ScrollView>
@@ -240,7 +160,7 @@ export default function LandingScreen({ onGoLogin }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.background,
+    backgroundColor: COLORS.backgroundDark,
   },
 
   // Navbar
@@ -250,7 +170,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingHorizontal: SPACING.xl,
     paddingVertical: SPACING.md,
-    backgroundColor: COLORS.surface,
+    backgroundColor: COLORS.background,
     borderBottomWidth: 1,
     borderBottomColor: COLORS.border,
     flexWrap: 'wrap',
@@ -260,31 +180,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: SPACING.md,
-  },
-  brandLogoBox: {
-    width: 38,
-    height: 38,
-    borderRadius: RADIUS.md,
-    backgroundColor: COLORS.primary,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  brandLogoText: {
-    color: COLORS.textPrimary,
-    fontWeight: '900',
-    fontSize: 20,
-    fontFamily: TYPOGRAPHY.fontFamily.display,
-  },
-  brandName: {
-    color: COLORS.textPrimary,
-    fontSize: TYPOGRAPHY.fontSize.lg,
-    fontWeight: TYPOGRAPHY.fontWeight.extrabold,
-    fontFamily: TYPOGRAPHY.fontFamily.display,
-  },
-  brandTag: {
-    color: COLORS.accent,
-    fontSize: 10,
-    fontWeight: TYPOGRAPHY.fontWeight.bold,
   },
   navLinks: {
     flexDirection: 'row',
@@ -327,7 +222,7 @@ const styles = StyleSheet.create({
   },
   heroSubtitle: {
     fontSize: TYPOGRAPHY.fontSize.lg,
-    color: COLORS.textMuted,
+    color: COLORS.textSecondary,
     textAlign: 'center',
     maxWidth: 640,
     fontFamily: TYPOGRAPHY.fontFamily.ui,
@@ -359,12 +254,12 @@ const styles = StyleSheet.create({
   trustNumber: {
     fontSize: TYPOGRAPHY.fontSize['2xl'],
     fontWeight: TYPOGRAPHY.fontWeight.extrabold,
-    color: COLORS.textPrimary,
+    color: COLORS.accent,
     fontFamily: TYPOGRAPHY.fontFamily.display,
   },
   trustLabel: {
     fontSize: TYPOGRAPHY.fontSize.xs,
-    color: COLORS.textMuted,
+    color: COLORS.textSecondary,
   },
 
   // General Section
@@ -392,7 +287,7 @@ const styles = StyleSheet.create({
   },
   sectionSub: {
     fontSize: TYPOGRAPHY.fontSize.md,
-    color: COLORS.textMuted,
+    color: COLORS.textSecondary,
     textAlign: 'center',
     maxWidth: 600,
     alignSelf: 'center',
@@ -415,111 +310,11 @@ const styles = StyleSheet.create({
     lineHeight: 20,
   },
 
-  // Product Mockup
-  productMockupBox: {
-    backgroundColor: COLORS.cardElevated,
-    borderRadius: RADIUS.xl,
-    borderWidth: 1,
-    borderColor: COLORS.border,
-    overflow: 'hidden',
-    marginTop: SPACING.lg,
-  },
-  mockupHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: SPACING.lg,
-    paddingVertical: SPACING.md,
-    backgroundColor: COLORS.surface,
-    borderBottomWidth: 1,
-    borderBottomColor: COLORS.border,
-    gap: SPACING.md,
-  },
-  mockupDots: {
-    flexDirection: 'row',
-    gap: 6,
-  },
-  dot: {
-    width: 10,
-    height: 10,
-    borderRadius: RADIUS.pill,
-  },
-  dotRed: { backgroundColor: '#EF4444' },
-  dotYellow: { backgroundColor: '#F59E0B' },
-  dotGreen: { backgroundColor: '#10B981' },
-  mockupUrl: {
-    color: COLORS.textMuted,
-    fontSize: TYPOGRAPHY.fontSize.xs,
-    fontFamily: TYPOGRAPHY.fontFamily.mono,
-  },
-  mockupBody: {
-    padding: SPACING.xl,
-  },
-  mockupKpis: {
-    flexDirection: 'row',
-    gap: SPACING.md,
-    flexWrap: 'wrap',
-  },
-  mockKpi: {
-    flex: 1,
-    minWidth: 180,
-    backgroundColor: COLORS.card,
-    padding: SPACING.lg,
-    borderRadius: RADIUS.lg,
-    borderWidth: 1,
-    borderColor: COLORS.border,
-    gap: SPACING.xs,
-  },
-  mockKpiLabel: {
-    fontSize: TYPOGRAPHY.fontSize.xs,
-    color: COLORS.textMuted,
-  },
-  mockKpiVal: {
-    fontSize: TYPOGRAPHY.fontSize.xl,
-    fontWeight: TYPOGRAPHY.fontWeight.bold,
-    color: COLORS.textPrimary,
-  },
-  mockKpiTrend: {
-    fontSize: TYPOGRAPHY.fontSize.xs,
-    color: COLORS.accent,
-  },
-
-  // Advantages Grid
-  advantagesGrid: {
-    flexDirection: 'row',
-    gap: SPACING.lg,
-    flexWrap: 'wrap',
-    marginTop: SPACING.lg,
-  },
-  advantageItem: {
-    flex: 1,
-    minWidth: 220,
-    backgroundColor: COLORS.card,
-    padding: SPACING.xl,
-    borderRadius: RADIUS.lg,
-    borderWidth: 1,
-    borderColor: COLORS.border,
-    gap: SPACING.xs,
-  },
-  advIcon: {
-    fontSize: 28,
-    marginBottom: SPACING.xs,
-  },
-  advTitle: {
-    fontSize: TYPOGRAPHY.fontSize.lg,
-    fontWeight: TYPOGRAPHY.fontWeight.bold,
-    color: COLORS.textPrimary,
-  },
-  advText: {
-    fontSize: TYPOGRAPHY.fontSize.sm,
-    color: COLORS.textMuted,
-    lineHeight: 20,
-  },
-
   // CTA Section
   ctaSection: {
     paddingHorizontal: SPACING.xl,
     paddingVertical: SPACING['3xl'],
-    backgroundColor: COLORS.surface,
+    backgroundColor: COLORS.background,
     borderTopWidth: 1,
     borderBottomWidth: 1,
     borderColor: COLORS.border,
@@ -541,7 +336,7 @@ const styles = StyleSheet.create({
   },
   ctaSub: {
     fontSize: TYPOGRAPHY.fontSize.md,
-    color: COLORS.textMuted,
+    color: COLORS.textSecondary,
     textAlign: 'center',
   },
   ctaBtn: {

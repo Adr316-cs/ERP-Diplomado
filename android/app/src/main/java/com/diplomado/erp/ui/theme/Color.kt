@@ -2,25 +2,59 @@ package com.diplomado.erp.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-val TecodeBackground = Color(0xFF080B14)
-val TecodeSurface = Color(0xFF0D111C)
-val TecodeCard = Color(0xFF111622)
-val TecodeCardElevated = Color(0xFF151B28)
-val TecodeBorder = Color(0xFF252D3D)
-val TecodeBorderHover = Color(0xFF3B475D)
+/**
+ * Paleta de Colores Oficial S-TUN CODEX — Intelligent ERP Solutions
+ */
 
-val TecodePrimary = Color(0xFF7C3AED)
-val TecodePrimaryLight = Color(0xFF9333EA)
-val TecodePrimaryDark = Color(0xFF5B21B6)
+// Fondos y Paneles
+val STunMidnight = Color(0xFF050D1A)       // Fondo Oscuro / Azul Medianoche
+val STunDarkBlue = Color(0xFF0A1628)       // Fondo Corporativo / Azul Oscuro
+val STunSurfaceDark = Color(0xFF0F213A)    // Superficie de tarjetas oscuras
+val STunStructure = Color(0xFF1E3A5F)      // Navegación y estructura / Azul Principal
 
-val TecodeAccent = Color(0xFFB6FF00) // Lime/Verde Tec[ode
-val TecodeAccentHover = Color(0xFFA2E000)
+// Colores de Marca y Acento
+val STunBlueSecondary = Color(0xFF3A7BD5)  // Elementos secundarios / Azul
+val STunCyanAccent = Color(0xFF00B4D8)     // Acciones destacadas / Cian
+val STunCyanGlow = Color(0x3300B4D8)       // Resplandor cian
+val STunBlueGlow = Color(0x333A7BD5)       // Resplandor azul
 
-val TecodeInfo = Color(0xFF00D9FF) // Cyan
-val TecodeWarning = Color(0xFFF59E0B)
-val TecodeError = Color(0xFFEF4444)
+// Superficie Clara y Bordes
+val STunWhite = Color(0xFFFFFFFF)          // Superficie clara / Texto contraste
+val STunSlateGray = Color(0xFF64748B)      // Texto secundario / Gris pizarra
+val STunSilverBorder = Color(0xFFC0C7D0)   // Bordes sutiles / Plata
+val STunDarkBorder = Color(0xFF1E3A5F)     // Bordes estructurados oscuros
 
-val TecodeTextPrimary = Color(0xFFF8FAFC)
-val TecodeTextSecondary = Color(0xFFCBD5E1)
-val TecodeTextMuted = Color(0xFF94A3B8)
-val TecodeTextDark = Color(0xFF080B14)
+// Estados Semánticos
+val STunSuccess = Color(0xFF10B981)        // Estado correcto / Verde
+val STunWarning = Color(0xFFF59E0B)        // Advertencia / Ámbar
+val STunError = Color(0xFFEF4444)          // Error / Rojo
+
+// Textos
+val STunTextPrimary = Color(0xFFF8FAFC)
+val STunTextSecondary = Color(0xFF64748B)
+val STunTextMuted = Color(0xFF94A3B8)
+val STunTextDark = Color(0xFF050D1A)
+
+// Alias para retrocompatibilidad
+val TecodeBackground = STunMidnight
+val TecodeSurface = STunDarkBlue
+val TecodeCard = STunSurfaceDark
+val TecodeCardElevated = STunStructure
+val TecodeBorder = STunDarkBorder
+val TecodeBorderHover = STunCyanAccent
+
+val TecodePrimary = STunStructure
+val TecodePrimaryLight = STunBlueSecondary
+val TecodePrimaryDark = STunDarkBlue
+
+val TecodeAccent = STunCyanAccent
+val TecodeAccentHover = Color(0xFF0096B4)
+
+val TecodeInfo = STunCyanAccent
+val TecodeWarning = STunWarning
+val TecodeError = STunError
+
+val TecodeTextPrimary = STunTextPrimary
+val TecodeTextSecondary = STunTextSecondary
+val TecodeTextMuted = STunTextMuted
+val TecodeTextDark = STunTextDark

@@ -14,9 +14,9 @@ import {
   TYPOGRAPHY,
 } from '../design-system/tokens';
 import { TTButton, TTInput } from '../design-system/components';
-import { TecodeLogo } from '../components/TecodeLogo';
+import { STunCodexLogo } from '../components/STunCodexLogo';
 
-/** Pantalla de inicio de sesión TECTODE ERP (Dark Theme) */
+/** Pantalla de inicio de sesión S-TUN CODEX ERP */
 export default function LoginScreen() {
   const { login } = useAuth();
   const [email, setEmail] = useState('');
@@ -42,13 +42,15 @@ export default function LoginScreen() {
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
       <View style={styles.card}>
-        {/* LOGO DE MARCA Tec[ode */}
+        {/* LOGO OFICIAL S-TUN CODEX */}
         <View style={styles.brandHeader}>
-          <TecodeLogo size="lg" layout="horizontal" />
+          <STunCodexLogo size="lg" layout="vertical" showTag={true} />
         </View>
 
-        <Text style={styles.welcomeTitle}>Iniciar Sesión</Text>
-        <Text style={styles.welcomeSub}>Ingrese sus credenciales para acceder al ecosistema.</Text>
+        <View style={styles.sloganBox}>
+          <Text style={styles.sloganText}>Tu empresa, en el <Text style={styles.sloganHighlight}>siguiente nivel.</Text></Text>
+          <Text style={styles.pillsText}>INTEGRA  ·  AUTOMATIZA  ·  CRECE</Text>
+        </View>
 
         {error ? (
           <View style={styles.errorBox}>
@@ -57,10 +59,10 @@ export default function LoginScreen() {
         ) : null}
 
         <TTInput
-          label="Correo Electrónico"
+          label="Usuario o correo"
           value={email}
           onChangeText={setEmail}
-          placeholder="usuario@empresa.com"
+          placeholder="usuario@estun-codex.com"
           keyboardType="email-address"
           autoCapitalize="none"
           autoComplete="email"
@@ -85,12 +87,14 @@ export default function LoginScreen() {
           onPress={onSubmit}
           style={styles.submitBtn}
         >
-          Acceder al Sistema
+          Iniciar sesión
         </TTButton>
 
-        <Text style={styles.footerNote}>
-          Tec[ode ERP Multiempresa · Sistema Seguro SSL / TLS
-        </Text>
+        <Text style={styles.forgotLink}>¿Olvidaste tu contraseña?</Text>
+
+        <View style={styles.footerLine}>
+          <Text style={styles.footerNote}>S-TUN CODEX · CONSTRUIDO PARA EL FUTURO</Text>
+        </View>
       </View>
     </KeyboardAvoidingView>
   );
@@ -99,64 +103,46 @@ export default function LoginScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.background,
+    backgroundColor: COLORS.backgroundDark,
     alignItems: 'center',
     justifyContent: 'center',
-    padding: SPACING.md,
+    padding: SPACING.lg,
   },
   card: {
     width: '100%',
     maxWidth: 420,
-    backgroundColor: COLORS.cardElevated,
+    backgroundColor: COLORS.card,
     borderWidth: 1,
     borderColor: COLORS.border,
     borderRadius: RADIUS.xl,
     padding: SPACING['2xl'],
     gap: SPACING.md,
+    boxShadow: '0 12px 32px rgba(0, 0, 0, 0.7)',
   },
   brandHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: SPACING.md,
-    marginBottom: SPACING.sm,
-  },
-  brandLogoBox: {
-    width: 44,
-    height: 44,
-    borderRadius: RADIUS.lg,
-    backgroundColor: COLORS.primary,
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  brandLogoText: {
-    color: COLORS.textPrimary,
-    fontWeight: '900',
-    fontSize: 24,
-    fontFamily: TYPOGRAPHY.fontFamily.display,
-  },
-  brandName: {
-    color: COLORS.textPrimary,
-    fontSize: TYPOGRAPHY.fontSize.xl,
-    fontWeight: TYPOGRAPHY.fontWeight.extrabold,
-    fontFamily: TYPOGRAPHY.fontFamily.display,
-    letterSpacing: 1,
-  },
-  brandTag: {
-    color: COLORS.accent,
-    fontSize: TYPOGRAPHY.fontSize.xs,
-    fontWeight: TYPOGRAPHY.fontWeight.bold,
-  },
-  welcomeTitle: {
-    fontSize: TYPOGRAPHY.fontSize['2xl'],
-    fontWeight: TYPOGRAPHY.fontWeight.bold,
-    color: COLORS.textPrimary,
-    fontFamily: TYPOGRAPHY.fontFamily.display,
-  },
-  welcomeSub: {
-    fontSize: TYPOGRAPHY.fontSize.sm,
-    color: COLORS.textMuted,
-    fontFamily: TYPOGRAPHY.fontFamily.ui,
     marginBottom: SPACING.xs,
+  },
+  sloganBox: {
+    alignItems: 'center',
+    marginBottom: SPACING.sm,
+    gap: 4,
+  },
+  sloganText: {
+    color: COLORS.textPrimary,
+    fontSize: TYPOGRAPHY.fontSize.md,
+    fontWeight: TYPOGRAPHY.fontWeight.bold,
+    textAlign: 'center',
+  },
+  sloganHighlight: {
+    color: COLORS.accent,
+  },
+  pillsText: {
+    color: COLORS.textSecondary,
+    fontSize: 10,
+    fontWeight: TYPOGRAPHY.fontWeight.bold,
+    letterSpacing: 1.5,
   },
   errorBox: {
     backgroundColor: `${COLORS.error}15`,
@@ -173,10 +159,24 @@ const styles = StyleSheet.create({
   submitBtn: {
     marginTop: SPACING.sm,
   },
-  footerNote: {
-    fontSize: TYPOGRAPHY.fontSize.xs,
-    color: COLORS.textMuted,
+  forgotLink: {
+    color: COLORS.accent,
+    fontSize: TYPOGRAPHY.fontSize.xs + 1,
     textAlign: 'center',
-    marginTop: SPACING.sm,
+    marginTop: SPACING.xs,
+    fontWeight: TYPOGRAPHY.fontWeight.semibold,
+  },
+  footerLine: {
+    borderTopWidth: 1,
+    borderTopColor: COLORS.border,
+    paddingTop: SPACING.md,
+    marginTop: SPACING.xs,
+  },
+  footerNote: {
+    fontSize: 10,
+    color: COLORS.textSecondary,
+    textAlign: 'center',
+    letterSpacing: 1,
+    fontWeight: TYPOGRAPHY.fontWeight.bold,
   },
 });

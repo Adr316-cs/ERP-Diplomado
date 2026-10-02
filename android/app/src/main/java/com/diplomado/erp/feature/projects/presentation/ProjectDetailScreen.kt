@@ -1,6 +1,5 @@
 package com.diplomado.erp.feature.projects.presentation
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -38,7 +37,7 @@ fun ProjectDetailScreen(
     ) {
         when (val state = uiState) {
             is ProjectDetailUiState.Loading -> {
-                TTLoading(text = "Cargando Centro de Control de la Obra...")
+                TTLoading(text = "Cargando Centro de Control del Proyecto...")
             }
             is ProjectDetailUiState.Error -> {
                 TTEmptyState(
@@ -61,13 +60,13 @@ fun ProjectDetailScreen(
                 ) {
                     item {
                         TTButton(
-                            text = "‹ Volver a Mis Obras",
+                            text = "‹ Volver a Proyectos",
                             onClick = onBackClick,
                             variant = TTButtonVariant.Ghost
                         )
                     }
 
-                    // CABECERA DE LA OBRA
+                    // CABECERA DEL PROYECTO
                     item {
                         TTCard {
                             Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
@@ -84,35 +83,35 @@ fun ProjectDetailScreen(
                                     text = project.name,
                                     fontSize = 22.sp,
                                     fontWeight = FontWeight.ExtraBold,
-                                    color = TecodeTextPrimary
+                                    color = STunWhite
                                 )
 
                                 if (!project.location.isNullOrEmpty()) {
                                     Text(
                                         text = "📍 Ubicación: ${project.location}",
                                         fontSize = 13.sp,
-                                        color = TecodeTextSecondary
+                                        color = STunSlateGray
                                     )
                                 }
 
                                 if (!project.managerName.isNullOrEmpty()) {
                                     Text(
-                                        text = "👷 Residente a cargo: ${project.managerName}",
+                                        text = "👷 Responsable: ${project.managerName}",
                                         fontSize = 12.sp,
-                                        color = TecodeTextMuted
+                                        color = STunSlateGray
                                     )
                                 }
                             }
                         }
                     }
 
-                    // METRICAS / KPIS DE LA OBRA
+                    // METRICAS / KPIS
                     item {
                         Text(
-                            text = "Control Presupuestario de Obra",
+                            text = "Control Presupuestario",
                             fontSize = 18.sp,
                             fontWeight = FontWeight.Bold,
-                            color = TecodeTextPrimary
+                            color = STunWhite
                         )
                     }
 
@@ -125,14 +124,14 @@ fun ProjectDetailScreen(
                                 label = "Presupuesto Total",
                                 value = "$${String.format("%.2f", project.budget)}",
                                 trend = "Aprobado",
-                                accentColor = TecodeAccent,
+                                accentColor = STunCyanAccent,
                                 modifier = Modifier.weight(1f)
                             )
                             TTStatCard(
                                 label = "Gastos Ejecutados",
                                 value = "$${String.format("%.2f", project.executedAmount)}",
                                 trend = "$percentage% gastado",
-                                accentColor = TecodeInfo,
+                                accentColor = STunBlueSecondary,
                                 modifier = Modifier.weight(1f)
                             )
                         }
@@ -143,7 +142,7 @@ fun ProjectDetailScreen(
                             label = "Disponible para Ejecutar",
                             value = "$${String.format("%.2f", available)}",
                             trend = "Fondo restante",
-                            accentColor = if (available > 0) TecodeAccent else TecodeError
+                            accentColor = if (available > 0) STunCyanAccent else STunError
                         )
                     }
 
@@ -156,25 +155,25 @@ fun ProjectDetailScreen(
                                         .fillMaxWidth()
                                         .height(10.dp)
                                         .clip(RoundedCornerShape(5.dp)),
-                                    color = if (percentage > 90) TecodeError else TecodeAccent,
-                                    trackColor = TecodeBorder,
+                                    color = if (percentage > 90) STunError else STunCyanAccent,
+                                    trackColor = STunDarkBorder,
                                 )
                                 Text(
-                                    text = "Se ha ejecutado el $percentage% del presupuesto total de la obra.",
+                                    text = "Se ha ejecutado el $percentage% del presupuesto total.",
                                     fontSize = 12.sp,
-                                    color = TecodeTextMuted
+                                    color = STunSlateGray
                                 )
                             }
                         }
                     }
 
-                    // CENTROS DE COSTO DE LA OBRA
+                    // CENTROS DE COSTO
                     item {
                         Text(
-                            text = "Partidas y Centros de Costo (${costCenters.size})",
+                            text = "Centros de Costo (${costCenters.size})",
                             fontSize = 18.sp,
                             fontWeight = FontWeight.Bold,
-                            color = TecodeTextPrimary
+                            color = STunWhite
                         )
                     }
 
@@ -182,9 +181,9 @@ fun ProjectDetailScreen(
                         item {
                             TTCard {
                                 Text(
-                                    text = "Sin partidas ni centros de costo registrados para esta obra.",
+                                    text = "Sin centros de costo registrados para este proyecto.",
                                     fontSize = 13.sp,
-                                    color = TecodeTextMuted
+                                    color = STunSlateGray
                                 )
                             }
                         }
@@ -201,7 +200,7 @@ fun ProjectDetailScreen(
                                             text = "${cc.code} · ${cc.name}",
                                             fontSize = 14.sp,
                                             fontWeight = FontWeight.Bold,
-                                            color = TecodeTextPrimary
+                                            color = STunWhite
                                         )
                                         TTBadge(status = "active", customLabel = cc.category)
                                     }
@@ -213,13 +212,13 @@ fun ProjectDetailScreen(
                                         Text(
                                             text = "Ejecutado: $${String.format("%.2f", cc.executedAmount)}",
                                             fontSize = 12.sp,
-                                            color = TecodeTextSecondary
+                                            color = STunSlateGray
                                         )
                                         Text(
                                             text = "Presupuesto: $${String.format("%.2f", cc.budget)}",
                                             fontSize = 12.sp,
                                             fontWeight = FontWeight.Bold,
-                                            color = TecodeAccent
+                                            color = STunCyanAccent
                                         )
                                     }
                                 }

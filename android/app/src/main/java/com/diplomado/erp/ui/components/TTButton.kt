@@ -19,11 +19,11 @@ import androidx.compose.ui.unit.sp
 import com.diplomado.erp.ui.theme.*
 
 enum class TTButtonVariant {
-    Primary,   // Lime #B6FF00
-    Brand,     // Morado #7C3AED
-    Secondary, // Card Elevated #151B28
+    Primary,   // Cian #00B4D8
+    Brand,     // Azul #1E3A5F
+    Secondary, // Superficie Oscura #0F213A
     Ghost,     // Transparente
-    Danger     // Red #EF4444
+    Danger     // Rojo #EF4444
 }
 
 @Composable
@@ -37,19 +37,19 @@ fun TTButton(
     icon: (@Composable () -> Unit)? = null
 ) {
     val containerColor = when (variant) {
-        TTButtonVariant.Primary -> TecodeAccent
-        TTButtonVariant.Brand -> TecodePrimary
-        TTButtonVariant.Secondary -> TecodeCardElevated
+        TTButtonVariant.Primary -> STunCyanAccent
+        TTButtonVariant.Brand -> STunStructure
+        TTButtonVariant.Secondary -> STunSurfaceDark
         TTButtonVariant.Ghost -> Color.Transparent
-        TTButtonVariant.Danger -> TecodeError.copy(alpha = 0.2f)
+        TTButtonVariant.Danger -> STunError.copy(alpha = 0.2f)
     }
 
     val contentColor = when (variant) {
-        TTButtonVariant.Primary -> TecodeTextDark
-        TTButtonVariant.Brand -> TecodeTextPrimary
-        TTButtonVariant.Secondary -> TecodeTextPrimary
-        TTButtonVariant.Ghost -> TecodeTextSecondary
-        TTButtonVariant.Danger -> TecodeError
+        TTButtonVariant.Primary -> STunMidnight
+        TTButtonVariant.Brand -> STunWhite
+        TTButtonVariant.Secondary -> STunWhite
+        TTButtonVariant.Ghost -> STunCyanAccent
+        TTButtonVariant.Danger -> STunError
     }
 
     Button(
@@ -81,7 +81,7 @@ fun TTButton(
                 Text(
                     text = text,
                     fontSize = 15.sp,
-                    fontWeight = FontWeight.Bold,
+                    fontWeight = FontWeight.ExtraBold,
                     color = contentColor
                 )
             }

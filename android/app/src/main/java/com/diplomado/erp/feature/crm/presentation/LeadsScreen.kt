@@ -44,7 +44,7 @@ class LeadsViewModel : ViewModel() {
                 if (res.isSuccessful && res.body()?.data != null) {
                     _uiState.value = LeadsUiState.Success(res.body()!!.data!!)
                 } else {
-                    _uiState.value = LeadsUiState.Error("No se pudieron cargar los prospectos de obra.")
+                    _uiState.value = LeadsUiState.Error("No se pudieron cargar los prospectos.")
                 }
             } catch (e: Exception) {
                 _uiState.value = LeadsUiState.Error(e.message ?: "Error de red al consultar prospectos.")
@@ -62,7 +62,7 @@ fun LeadsScreen(
 
     Box(modifier = modifier.fillMaxSize().padding(16.dp)) {
         when (val state = uiState) {
-            is LeadsUiState.Loading -> TTLoading(text = "Cargando prospectos y proyectos comerciales...")
+            is LeadsUiState.Loading -> TTLoading(text = "Cargando prospectos comerciales...")
             is LeadsUiState.Error -> {
                 TTEmptyState(
                     title = "Error de prospectos",
@@ -73,10 +73,10 @@ fun LeadsScreen(
             }
             is LeadsUiState.Success -> {
                 TTDataTable(
-                    title = "CRM Prospectos de Obra",
-                    subtitle = "${state.leads.size} proyectos en negociación",
+                    title = "CRM Prospectos",
+                    subtitle = "${state.leads.size} registros en negociación",
                     items = state.leads,
-                    emptyText = "Sin prospectos de obra registrados."
+                    emptyText = "Sin prospectos registrados."
                 ) { lead ->
                     TTCard(modifier = Modifier.fillMaxWidth()) {
                         Row(
@@ -89,20 +89,20 @@ fun LeadsScreen(
                                     text = lead.name,
                                     fontSize = 16.sp,
                                     fontWeight = FontWeight.Bold,
-                                    color = TecodeTextPrimary
+                                    color = STunWhite
                                 )
                                 Spacer(modifier = Modifier.height(2.dp))
                                 Text(
                                     text = "Empresa: ${lead.company ?: "Particular"} • Email: ${lead.email ?: "—"}",
                                     fontSize = 12.sp,
-                                    color = TecodeTextMuted
+                                    color = STunSlateGray
                                 )
                                 if ((lead.expectedAmount ?: 0.0) > 0) {
                                     Text(
                                         text = "Monto estimado: $${String.format("%.2f", lead.expectedAmount)}",
                                         fontSize = 12.sp,
                                         fontWeight = FontWeight.Bold,
-                                        color = TecodeAccent
+                                        color = STunCyanAccent
                                     )
                                 }
                             }

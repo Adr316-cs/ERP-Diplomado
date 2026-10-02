@@ -23,11 +23,11 @@ fun TTBadge(
     customLabel: String? = null
 ) {
     val color = when (status) {
-        "active", "APPROVED", "WON", "POSTED", "DONE", "SUCCESS" -> TecodeAccent
-        "NEW", "RELEASED", "CONTACTED" -> TecodeInfo
-        "QUALIFIED" -> TecodeWarning
-        "LOCKED", "REJECTED", "LOST", "FAILURE" -> TecodeError
-        else -> TecodeTextMuted
+        "active", "APPROVED", "WON", "POSTED", "DONE", "SUCCESS" -> STunSuccess
+        "NEW", "RELEASED" -> STunCyanAccent
+        "CONTACTED", "QUALIFIED" -> STunWarning
+        "LOCKED", "REJECTED", "LOST", "FAILURE" -> STunError
+        else -> STunSlateGray
     }
 
     val label = customLabel ?: when (status) {
@@ -52,8 +52,8 @@ fun TTBadge(
     Surface(
         modifier = modifier,
         shape = RoundedCornerShape(100.dp),
-        color = color.copy(alpha = 0.12f),
-        border = BorderStroke(1.dp, color.copy(alpha = 0.35f))
+        color = color.copy(alpha = 0.15f),
+        border = BorderStroke(1.dp, color.copy(alpha = 0.4f))
     ) {
         Row(
             modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp),

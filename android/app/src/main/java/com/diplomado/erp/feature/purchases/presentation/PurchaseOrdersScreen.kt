@@ -24,10 +24,10 @@ fun PurchaseOrdersScreen(
 
     Box(modifier = modifier.fillMaxSize().padding(16.dp)) {
         when (val state = uiState) {
-            is PurchaseOrdersUiState.Loading -> TTLoading(text = "Cargando órdenes de compra de materiales...")
+            is PurchaseOrdersUiState.Loading -> TTLoading(text = "Cargando órdenes de compra...")
             is PurchaseOrdersUiState.Error -> {
                 TTEmptyState(
-                    title = "Error de compras de obra",
+                    title = "Error de compras",
                     description = state.message,
                     actionLabel = "Reintentar",
                     onAction = { viewModel.loadOrders() }
@@ -35,14 +35,14 @@ fun PurchaseOrdersScreen(
             }
             is PurchaseOrdersUiState.Success -> {
                 TTDataTable(
-                    title = "Órdenes de Compra para Obra",
-                    subtitle = "${state.orders.size} compras de insumos registradas",
+                    title = "Órdenes de Compra",
+                    subtitle = "${state.orders.size} compras registradas",
                     items = state.orders,
                     onCreateClick = if (PermissionChecker.hasPermission("purchases.create")) {
                         { /* Crear orden de compra */ }
                     } else null,
                     createLabel = "Nueva compra",
-                    emptyText = "Sin órdenes de compra para obra registradas."
+                    emptyText = "Sin órdenes de compra registradas."
                 ) { order ->
                     TTCard(modifier = Modifier.fillMaxWidth()) {
                         Column {
@@ -56,13 +56,13 @@ fun PurchaseOrdersScreen(
                                         text = "Folio: ${order.code}",
                                         fontSize = 16.sp,
                                         fontWeight = FontWeight.Bold,
-                                        color = TecodeTextPrimary
+                                        color = STunWhite
                                     )
                                     Spacer(modifier = Modifier.height(2.dp))
                                     Text(
                                         text = "Proveedor: ${order.supplier?.name ?: "Proveedor de Insumos"} • Total: $${String.format("%.2f", order.total)}",
                                         fontSize = 13.sp,
-                                        color = TecodeTextMuted
+                                        color = STunSlateGray
                                     )
                                 }
                                 TTBadge(status = order.status)
@@ -82,7 +82,7 @@ fun PurchaseOrdersScreen(
                                     )
                                     TTButton(
                                         text = "Rechazar",
-                                        onClick = { viewModel.rejectOrder(order.id, "Rechazado desde App Tec[ode") },
+                                        onClick = { viewModel.rejectOrder(order.id, "Rechazado desde App S-TUN CODEX") },
                                         variant = TTButtonVariant.Danger,
                                         modifier = Modifier.weight(1f)
                                     )

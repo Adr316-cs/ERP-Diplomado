@@ -23,7 +23,7 @@ fun StockScreen(
 
     Box(modifier = modifier.fillMaxSize().padding(16.dp)) {
         when (val state = uiState) {
-            is StockUiState.Loading -> TTLoading(text = "Cargando existencias en bodegas de obra...")
+            is StockUiState.Loading -> TTLoading(text = "Cargando existencias en almacenes...")
             is StockUiState.Error -> {
                 TTEmptyState(
                     title = "Error de existencias",
@@ -34,10 +34,10 @@ fun StockScreen(
             }
             is StockUiState.Success -> {
                 TTDataTable(
-                    title = "Existencias en Bodegas",
-                    subtitle = "${state.stockLevels.size} insumos disponibles en obra",
+                    title = "Existencias en Almacén",
+                    subtitle = "${state.stockLevels.size} registros de stock",
                     items = state.stockLevels,
-                    emptyText = "Sin existencias de materiales en bodegas."
+                    emptyText = "Sin existencias en almacenes."
                 ) { stock ->
                     TTCard(modifier = Modifier.fillMaxWidth()) {
                         Row(
@@ -47,16 +47,16 @@ fun StockScreen(
                         ) {
                             Column(modifier = Modifier.weight(1f)) {
                                 Text(
-                                    text = stock.product?.name ?: "Material sin nombre",
+                                    text = stock.product?.name ?: "Producto sin nombre",
                                     fontSize = 16.sp,
                                     fontWeight = FontWeight.Bold,
-                                    color = TecodeTextPrimary
+                                    color = STunWhite
                                 )
                                 Spacer(modifier = Modifier.height(2.dp))
                                 Text(
-                                    text = "SKU: ${stock.product?.sku ?: "—"} • Bodega: ${stock.warehouse?.name ?: "Bodega Central"}",
+                                    text = "SKU: ${stock.product?.sku ?: "—"} • Almacén: ${stock.warehouse?.name ?: "Central"}",
                                     fontSize = 12.sp,
-                                    color = TecodeTextMuted
+                                    color = STunSlateGray
                                 )
                             }
                             Column(horizontalAlignment = Alignment.End) {
@@ -64,7 +64,7 @@ fun StockScreen(
                                     text = "${stock.quantity} ${stock.product?.unit ?: "ud"}",
                                     fontSize = 18.sp,
                                     fontWeight = FontWeight.ExtraBold,
-                                    color = TecodeAccent
+                                    color = STunCyanAccent
                                 )
                                 val min = stock.product?.minStock ?: 0.0
                                 if (stock.quantity <= min && min > 0) {
