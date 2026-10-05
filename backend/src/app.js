@@ -79,6 +79,14 @@ app.use(
   })
 );
 
+app.get('/', (req, res) => {
+  res.json({
+    success: true,
+    data: { status: 'ok', health: `${env.apiPrefix}/health` },
+    message: 'API disponible',
+  });
+});
+
 /** Health check público para monitoreo/load balancer. */
 app.get('/health', (req, res) => {
   res.json({ success: true, data: { status: 'ok', uptime: process.uptime() } });
