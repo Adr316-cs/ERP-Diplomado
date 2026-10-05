@@ -1,16 +1,17 @@
 'use strict';
 
 const repo = require('./project.repository');
-const { ConflictError, NotFoundError } = require('../../common/errors');
-const { parsePagination, buildMeta } = require('../../common/pagination');
+const ApiError = require('../../utils/ApiError');
+const { parsePagination, buildMeta } = require('../../utils/pagination');
 
 class ProjectService {
   async list(companyId, query) {
-    const { page, limit, skip, sortBy, sortDir } = parsePagination(query, {
-      whitelist: ['code', 'name', 'budget', 'status', 'createdAt'],
-      defaultSortBy: 'createdAt',
-      defaultSortDir: 'desc',
-    });
+    const { page, limit, skip, sort: defaultSort } = parsePagination(query);
+    const sortableFields = ['code', 'name', 'budget', 'status', 'createdAt'];
+    const sort =
+      query.sortBy && sortableFields.includes(query.sortBy)
+        ? { [query.sortBy]: query.sortDir === 'desc' ? -1 : 1 }
+        : defaultSort;
 
     const filter = { companyId };
     if (query.status) filter.status = query.status;
@@ -20,22 +21,22 @@ class ProjectService {
     }
 
     const [items, total] = await Promise.all([
-      repo.find(companyId, filter, { skip, limit, sort: { [sortBy]: sortDir === 'asc' ? 1 : -1 } }),
+      repo.find(companyId, filter, { skip, limit, sort }),
       repo.count(companyId, filter),
     ]);
 
-    return { items, meta: buildMeta(total, page, limit) };
+    return { items, meta: buildMeta(page, limit, total) };
   }
 
   async getById(companyId, id) {
     const project = await repo.findById(companyId, id);
-    if (!project) throw new NotFoundError('Obra no encontrada.');
+    if (!project) throw ApiError.notFound('Obra no encontrada.');
     return project;
   }
 
   async create(companyId, payload) {
     const existing = await repo.findByCode(companyId, payload.code);
-    if (existing) throw new ConflictError(`Ya existe una obra con el código "${payload.code}".`);
+    if (existing) throw ApiError.conflict(`Ya existe una obra con el código "${payload.code}".`);
 
     return repo.create({
       companyId,
@@ -48,14 +49,14 @@ class ProjectService {
     const current = await this.getById(companyId, id);
     if (payload.code && payload.code.toUpperCase() !== current.code) {
       const dup = await repo.findByCode(companyId, payload.code);
-      if (dup) throw new ConflictError(`Ya existe otra obra con el código "${payload.code}".`);
+      if (dup) throw ApiError.conflict(`Ya existe otra obra con el código "${payload.code}".`);
     }
 
     const updated = await repo.updateById(companyId, id, {
       ...payload,
       ...(payload.code ? { code: payload.code.toUpperCase() } : {}),
     });
-    if (!updated) throw new NotFoundError('Obra no encontrada.');
+    if (!updated) throw ApiError.notFound('Obra no encontrada.');
     return updated;
   }
 
