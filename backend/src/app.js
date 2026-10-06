@@ -58,17 +58,28 @@ app.disable('x-powered-by');
 app.set('trust proxy', 1); // IP real detrás de proxy (rate limit + auditoría)
 
 app.use(helmet());
-app.use(
-  cors({
-    origin(origin, cb) {
-      // Sin Origin (apps móviles/cURL) se permite: la seguridad está en el token.
-      if (!origin || env.corsOrigins.includes(origin)) return cb(null, true);
-      return cb(null, false); // sin cabeceras CORS => el navegador bloquea
-    },
-    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
-  })
-);
+
+const corsOptions = {
+  origin(origin, cb) {
+    // Permitir peticiones sin Origin (apps móviles, cURL, etc.)
+    if (!origin || env.corsOrigins.includes(origin)) {
+      return cb(null, true);
+    }
+
+    return cb(null, false);
+  },
+
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+
+  allowedHeaders: ['Content-Type', 'Authorization'],
+
+  optionsSuccessStatus: 204,
+};
+
+app.use(cors(corsOptions));
+
+app.options('*', cors(corsOptions));
+
 app.use(express.json({ limit: '1mb' }));
 
 app.use(
