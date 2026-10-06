@@ -18,4 +18,4 @@ services:
       - key: JWT_REFRESH_SECRET
         generateValue: true
       - key: CORS_ORIGINS
-        value: "*"
+        value: "http://localhost:19006,http://localhost:8081,https://erp-diplomado.luis-adriancanosampedro2006.workers.dev"
