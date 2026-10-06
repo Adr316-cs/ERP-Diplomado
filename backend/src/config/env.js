@@ -50,10 +50,13 @@ const env = {
     accessExpires: process.env.JWT_ACCESS_EXPIRES || '15m',
     refreshExpires: process.env.JWT_REFRESH_EXPIRES || '7d',
   },
-  corsOrigins: (process.env.CORS_ORIGINS || 'http://localhost:19006')
-    .split(',')
-    .map((origin) => origin.trim())
-    .filter(Boolean),
+  corsOrigins: [
+    'https://erp-diplomado.luis-adriancanosampedro2006.workers.dev',
+    ...(process.env.CORS_ORIGINS || 'http://localhost:19006,http://localhost:8081')
+      .split(',')
+      .map((origin) => origin.trim())
+      .filter(Boolean),
+  ],
   seed: {
     adminEmail: process.env.SEED_ADMIN_EMAIL || 'admin@example.com',
     adminPassword: process.env.SEED_ADMIN_PASSWORD || '',
