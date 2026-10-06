@@ -2,7 +2,8 @@
 
 const frontendOrigin =
   'https://erp-diplomado.luis-adriancanosampedro2006.workers.dev';
-process.env.CORS_ORIGINS = 'http://localhost:19006,http://localhost:8081';
+process.env.CORS_ORIGINS =
+  `${frontendOrigin},http://localhost:19006,http://localhost:8081`;
 const localOrigin = 'http://localhost:19006';
 
 const request = require('supertest');
