@@ -65,14 +65,20 @@ data class UserDto(
     @SerializedName("email") val email: String,
     @SerializedName("name") val name: String,
     @SerializedName("lastName") val lastName: String? = null,
-    @SerializedName("status") val status: String = "active"
+    @SerializedName("status") val status: String = "active",
+    @SerializedName("companyId") val companyId: String? = null,
+    @SerializedName("branchId") val branchId: String? = null
 )
 
 data class RoleDto(
     @SerializedName("_id") val id: String,
     @SerializedName("code") val code: String,
     @SerializedName("label") val label: String,
-    @SerializedName("permissions") val permissions: List<String> = emptyList()
+    @SerializedName("permissions") val permissions: List<String>?
+)
+
+data class LogoutResponse(
+    @SerializedName("loggedOut") val loggedOut: Boolean
 )
 
 data class CompanyDto(

@@ -4,21 +4,25 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.diplomado.erp.core.common.rbac.PermissionChecker
 import com.diplomado.erp.core.security.TokenStorage
 import com.diplomado.erp.ui.components.*
 import com.diplomado.erp.ui.theme.*
+import java.text.NumberFormat
+import java.util.Locale
+
+private fun formatCurrency(amount: Double?): String =
+    amount?.let { NumberFormat.getCurrencyInstance(Locale("es", "MX")).format(it) } ?: "—"
 
 @Composable
 fun DashboardScreen(
@@ -28,10 +32,10 @@ fun DashboardScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
-    val userName = TokenStorage.getUserName().ifEmpty { "Administrador" }
+    val userName = TokenStorage.getUserName().ifEmpty { "Usuario" }
     val userEmail = TokenStorage.getUserEmail()
-    val roleLabel = TokenStorage.getRoleLabel().ifEmpty { "Administrador" }
-    val companyName = TokenStorage.getCompanyName().ifEmpty { "S-TUN CODEX ERP" }
+    val roleLabel = TokenStorage.getRoleLabel().ifEmpty { "Sin rol confirmado" }
+    val companyName = TokenStorage.getCompanyName().ifEmpty { "Sin empresa asignada" }
     val branchName = TokenStorage.getBranchName()
 
     Box(modifier = modifier.fillMaxSize().background(STunMidnight).padding(16.dp)) {
@@ -94,7 +98,7 @@ fun DashboardScreen(
                         }
                     }
 
-                    // INDICADORES PRINCIPALES (TARJETAS KPI COMO LA IMAGEN)
+                    // KPI values are only shown when the backend confirms access and returns data.
                     item {
                         Text(
                             text = "Indicadores Principales",
@@ -110,16 +114,15 @@ fun DashboardScreen(
                             horizontalArrangement = Arrangement.spacedBy(12.dp)
                         ) {
                             TTStatCard(
-                                label = "Clientes",
-                                value = "1,248",
-                                trend = "+12%",
+                                label = "Órdenes de venta",
+                                value = state.kpis?.sales?.count?.toString() ?: "—",
+                                trend = if (state.kpis == null) "Sin acceso a indicadores" else "Histórico",
                                 accentColor = STunCyanAccent,
                                 modifier = Modifier.weight(1f)
                             )
                             TTStatCard(
-                                label = "Ventas",
-                                value = "$245,780",
-                                trend = "+8%",
+                                label = "Ventas aprobadas",
+                                value = formatCurrency(state.kpis?.sales?.total),
                                 accentColor = STunCyanAccent,
                                 modifier = Modifier.weight(1f)
                             )
@@ -132,47 +135,32 @@ fun DashboardScreen(
                             horizontalArrangement = Arrangement.spacedBy(12.dp)
                         ) {
                             TTStatCard(
-                                label = "Inventario",
-                                value = "${state.kpis?.catalog?.totalProducts ?: 3420}",
-                                trend = "+5%",
+                                label = "Productos",
+                                value = state.kpis?.catalog?.totalProducts?.toString() ?: "—",
                                 accentColor = STunBlueSecondary,
                                 modifier = Modifier.weight(1f)
                             )
                             TTStatCard(
-                                label = "Proyectos",
-                                value = "18",
-                                trend = "+2%",
-                                accentColor = STunCyanAccent,
+                                label = "Órdenes de compra",
+                                value = state.kpis?.purchases?.count?.toString() ?: "—",
+                                trend = if (state.kpis == null) "Sin acceso a indicadores" else "Histórico",
+                                accentColor = STunBlueSecondary,
                                 modifier = Modifier.weight(1f)
                             )
                         }
                     }
 
-                    // ESTADO DEL SISTEMA
                     item {
-                        TTCard(title = "Estado del sistema") {
-                            Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                                Row(verticalAlignment = Alignment.CenterVertically) {
-                                    Box(
-                                        modifier = Modifier
-                                            .size(10.dp)
-                                            .clip(CircleShape)
-                                            .background(STunSuccess)
-                                    )
-                                    Spacer(modifier = Modifier.width(8.dp))
-                                    Text(
-                                        text = "En línea",
-                                        fontSize = 16.sp,
-                                        fontWeight = FontWeight.Bold,
-                                        color = STunSuccess
-                                    )
-                                }
-                                Text(
-                                    text = "Todos los servicios operando correctamente.",
-                                    fontSize = 13.sp,
-                                    color = STunSlateGray
-                                )
-                            }
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(12.dp)
+                        ) {
+                            TTStatCard(
+                                label = "Compras aprobadas",
+                                value = formatCurrency(state.kpis?.purchases?.total),
+                                accentColor = STunCyanAccent,
+                                modifier = Modifier.weight(1f)
+                            )
                         }
                     }
 
@@ -215,9 +203,13 @@ fun DashboardScreen(
                         item {
                             TTCard {
                                 Text(
-                                    text = "📈 Tendencia de actividad semanal constante. Sin incidencias.",
+                                    text = if (PermissionChecker.hasPermission("audit.read")) {
+                                        "No hay actividad registrada para mostrar."
+                                    } else {
+                                        "No tienes permiso para consultar la actividad."
+                                    },
                                     fontSize = 13.sp,
-                                    color = STunCyanAccent
+                                    color = STunSlateGray
                                 )
                             }
                         }

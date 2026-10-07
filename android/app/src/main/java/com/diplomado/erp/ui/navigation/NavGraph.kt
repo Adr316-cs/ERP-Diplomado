@@ -4,13 +4,16 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
+import android.widget.Toast
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
+import com.diplomado.erp.core.network.client.RetrofitClient
 import com.diplomado.erp.core.security.TokenStorage
 import com.diplomado.erp.feature.auth.presentation.LoginScreen
 import com.diplomado.erp.feature.configuration.presentation.AuditScreen
@@ -26,16 +29,30 @@ import com.diplomado.erp.feature.sales.presentation.SalesOrdersScreen
 import com.diplomado.erp.ui.components.TTBottomBar
 import com.diplomado.erp.ui.components.TTTopBar
 import com.diplomado.erp.ui.theme.TecodeBackground
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.collect
 
 @Composable
 fun NavGraph(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController()
 ) {
+    val scope = rememberCoroutineScope()
+    val context = LocalContext.current
     val startDestination = if (TokenStorage.hasValidSession()) {
         NavDestination.Main.route
     } else {
         NavDestination.Login.route
+    }
+
+    LaunchedEffect(navController) {
+        TokenStorage.sessionInvalidated.collect {
+            if (navController.currentDestination?.route != NavDestination.Login.route) {
+                navController.navigate(NavDestination.Login.route) {
+                    popUpTo(0) { inclusive = true }
+                }
+            }
+        }
     }
 
     NavHost(
@@ -56,9 +73,35 @@ fun NavGraph(
         composable(NavDestination.Main.route) {
             MainContainer(
                 onLogout = {
-                    TokenStorage.clear()
-                    navController.navigate(NavDestination.Login.route) {
-                        popUpTo(0) { inclusive = true }
+                    scope.launch {
+                        var logoutError: String? = null
+                        try {
+                            val response = RetrofitClient.api.logout()
+                            val body = response.body()
+                            if (
+                                !response.isSuccessful ||
+                                body?.success != true ||
+                                body.data?.loggedOut != true
+                            ) {
+                                logoutError = body?.error?.message
+                                    ?: "El servidor no confirmó el cierre de sesión."
+                            }
+                        } catch (error: Exception) {
+                            logoutError = error.message
+                                ?: "No se pudo confirmar el cierre de sesión con el servidor."
+                        } finally {
+                            TokenStorage.clear()
+                            navController.navigate(NavDestination.Login.route) {
+                                popUpTo(0) { inclusive = true }
+                            }
+                        }
+                        if (logoutError != null) {
+                            Toast.makeText(
+                                context,
+                                logoutError ?: "No se confirmó el cierre de sesión remoto.",
+                                Toast.LENGTH_LONG
+                            ).show()
+                        }
                     }
                 }
             )

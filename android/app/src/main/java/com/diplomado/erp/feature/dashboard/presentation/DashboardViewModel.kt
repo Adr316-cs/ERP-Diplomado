@@ -35,16 +35,24 @@ class DashboardViewModel : ViewModel() {
 
                 if (PermissionChecker.hasPermission("reports.read")) {
                     val res = RetrofitClient.api.getKpis()
-                    if (res.isSuccessful) {
-                        kpisData = res.body()?.data
+                    val body = res.body()
+                    if (!res.isSuccessful || body?.success != true || body.data == null) {
+                        throw IllegalStateException(
+                            body?.error?.message ?: "No se pudieron cargar los indicadores."
+                        )
                     }
+                    kpisData = body.data
                 }
 
                 if (PermissionChecker.hasPermission("audit.read")) {
                     val auditRes = RetrofitClient.api.getAuditLogs(5)
-                    if (auditRes.isSuccessful) {
-                        logs = auditRes.body()?.data ?: emptyList()
+                    val body = auditRes.body()
+                    if (!auditRes.isSuccessful || body?.success != true || body.data == null) {
+                        throw IllegalStateException(
+                            body?.error?.message ?: "No se pudo cargar la actividad reciente."
+                        )
                     }
+                    logs = body.data
                 }
 
                 _uiState.value = DashboardUiState.Success(kpisData, logs)

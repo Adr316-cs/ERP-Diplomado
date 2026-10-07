@@ -32,48 +32,60 @@ class LoginViewModel : ViewModel() {
             _uiState.value = LoginUiState.Loading
             try {
                 val response = RetrofitClient.api.login(LoginRequest(email.trim(), password))
-                if (response.isSuccessful && response.body()?.success == true) {
-                    val loginData = response.body()?.data
+                val body = response.body()
+                if (response.isSuccessful && body?.success == true) {
+                    val loginData = body.data
                     if (loginData != null) {
-                        // Guardar Tokens
                         TokenStorage.saveTokens(loginData.accessToken, loginData.refreshToken)
-
-                        // Traer metadatos de usuario / permisos con /auth/me
-                        fetchMeAndSaveSession(loginData.user.email)
+                        fetchMeAndSaveSession()
                     } else {
+                        TokenStorage.clear()
                         _uiState.value = LoginUiState.Error("Respuesta inválida del servidor.")
                     }
                 } else {
-                    val errorMsg = response.body()?.error?.message 
+                    TokenStorage.clear()
+                    val errorMsg = body?.error?.message
                         ?: "Credenciales inválidas. Verifique sus datos."
                     _uiState.value = LoginUiState.Error(errorMsg)
                 }
             } catch (e: Exception) {
+                TokenStorage.clear()
                 _uiState.value = LoginUiState.Error(e.message ?: "Error de conexión con el servidor.")
             }
         }
     }
 
-    private suspend fun fetchMeAndSaveSession(emailFallback: String) {
-        try {
-            val meRes = RetrofitClient.api.getMe()
-            if (meRes.isSuccessful && meRes.body()?.data != null) {
-                val me = meRes.body()!!.data!!
-                TokenStorage.saveSessionInfo(
-                    email = me.user.email,
-                    name = me.user.name,
-                    roleLabel = me.role?.label ?: me.role?.code ?: "Usuario",
-                    permissions = me.role?.permissions ?: emptyList(),
-                    companyName = me.company?.name ?: "S-TUN CODEX ERP",
-                    branchName = me.branch?.name ?: ""
-                )
-            } else {
-                TokenStorage.saveSessionInfo(emailFallback, "Operador", "Usuario", emptyList(), "S-TUN CODEX ERP", "")
-            }
-            _uiState.value = LoginUiState.Success
-        } catch (e: Exception) {
-            TokenStorage.saveSessionInfo(emailFallback, "Operador", "Usuario", emptyList(), "S-TUN CODEX ERP", "")
-            _uiState.value = LoginUiState.Success
+    private suspend fun fetchMeAndSaveSession() {
+        val response = RetrofitClient.api.getMe()
+        val body = response.body()
+        val me = body?.data
+        if (!response.isSuccessful || body?.success != true || me == null) {
+            throw IllegalStateException(
+                body?.error?.message ?: "No se pudo validar la sesión con el servidor."
+            )
         }
+
+        val role = me.role
+            ?: throw IllegalStateException("El servidor no confirmó el rol de este usuario.")
+        val permissions = role.permissions
+            ?: throw IllegalStateException("El servidor no confirmó los permisos del usuario.")
+        if (me.user.companyId != null && me.company?.id != me.user.companyId) {
+            throw IllegalStateException("El servidor no confirmó la empresa de la sesión.")
+        }
+        if (me.user.branchId != null && me.branch?.id != me.user.branchId) {
+            throw IllegalStateException("El servidor no confirmó la sucursal de la sesión.")
+        }
+
+        TokenStorage.saveSessionInfo(
+            email = me.user.email,
+            name = me.user.name,
+            roleLabel = role.label.ifBlank { role.code },
+            permissions = permissions,
+            companyId = me.user.companyId,
+            companyName = me.company?.name ?: "S-TUN CODEX ERP",
+            branchId = me.user.branchId,
+            branchName = me.branch?.name ?: ""
+        )
+        _uiState.value = LoginUiState.Success
     }
 }

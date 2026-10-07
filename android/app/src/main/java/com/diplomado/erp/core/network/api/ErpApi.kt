@@ -21,7 +21,7 @@ interface ErpApi {
     suspend fun changePassword(@Body request: ChangePasswordRequest): Response<ApiResponse<Unit>>
 
     @POST("auth/logout")
-    suspend fun logout(): Response<ApiResponse<Unit>>
+    suspend fun logout(): Response<ApiResponse<LogoutResponse>>
 
     // Reports
     @GET("reports/kpis")

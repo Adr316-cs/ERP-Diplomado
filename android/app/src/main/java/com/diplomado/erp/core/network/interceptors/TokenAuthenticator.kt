@@ -18,15 +18,23 @@ class TokenAuthenticator(private val baseUrl: String) : Authenticator {
     private val lock = Any()
 
     override fun authenticate(route: Route?, response: Response): Request? {
+        if (response.request.header("Authorization").isNullOrBlank()) {
+            return null
+        }
+
         // Evitar loops si la propia llamada de refresh devuelve 401
         if (response.request.url.encodedPath.contains("/auth/refresh")) {
-            TokenStorage.clear()
+            TokenStorage.invalidateSession()
             return null
         }
 
         synchronized(lock) {
             val currentToken = TokenStorage.getAccessToken()
-            val refreshToken = TokenStorage.getRefreshToken() ?: return null
+            val refreshToken = TokenStorage.getRefreshToken()
+            if (refreshToken.isNullOrEmpty()) {
+                TokenStorage.invalidateSession()
+                return null
+            }
 
             // Si otro hilo ya refrescó el token en paralelo, reintentar con el nuevo token
             val reqToken = response.request.header("Authorization")?.replace("Bearer ", "")
@@ -45,7 +53,7 @@ class TokenAuthenticator(private val baseUrl: String) : Authenticator {
                     .build()
             } else {
                 // Refresh fallido / expirado: limpiar sesión
-                TokenStorage.clear()
+                TokenStorage.invalidateSession()
                 return null
             }
         }

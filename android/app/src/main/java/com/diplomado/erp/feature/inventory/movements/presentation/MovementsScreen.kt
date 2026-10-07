@@ -1,4 +1,4 @@
-package com.diplomado.erp.feature.inventory.movements/presentation
+package com.diplomado.erp.feature.inventory.movements.presentation
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Text
