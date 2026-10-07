@@ -30,6 +30,6 @@ frontend/
 ## Notas
 
 - Sin navegación todavía (un solo cambio de pantalla por sesión); `@react-navigation` llega con los módulos de la FASE 3.
-- Los tokens viven en memoria: al recargar se pierde la sesión (TODO: AsyncStorage).
+- Los tokens se persisten en localStorage cuando está disponible; al recargar se restaura la sesión automáticamente.
 - Los estilos usan `StyleSheet` de React Native: válidos en web y móvil sin cambios.
 - El home ya degrada por permisos (`products.read`, `sales.orders.read`…): sirve de prueba viva del RBAC.

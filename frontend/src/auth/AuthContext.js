@@ -1,12 +1,11 @@
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
-import { api, setTokens, setOnSessionExpired } from '../api/client';
+import { api, loadPersistedTokens, setTokens, setOnSessionExpired } from '../api/client';
 
 /**
  * Sesión de la aplicación.
  * - login(email, password) → llama a /auth/login y guarda los tokens.
  * - logout() → /auth/logout (invalidación global en servidor) y limpia.
  * - session: salida de /auth/me ({ user, role, company, branch }).
- * TODO FASE 3: persistir tokens con AsyncStorage (hoy: memoria, se pierde al recargar).
  */
 const AuthContext = createContext(null);
 
@@ -24,15 +23,33 @@ export function AuthProvider({ children }) {
     setSession(null);
   }, []);
 
+  const restoreSession = useCallback(async () => {
+    const persisted = loadPersistedTokens();
+    if (!persisted.access || !persisted.refresh) {
+      setInitializing(false);
+      return;
+    }
+
+    setTokens(persisted);
+    try {
+      const me = await api('/auth/me');
+      setSession(me);
+    } catch {
+      setTokens({ access: null, refresh: null });
+      setSession(null);
+    } finally {
+      setInitializing(false);
+    }
+  }, []);
+
   useEffect(() => {
     setOnSessionExpired(() => {
       // Refresh inválido/expirado: la sesión ya no es válida.
       setTokens({ access: null, refresh: null });
       setSession(null);
     });
-    setInitializing(false);
-    // TODO: si hay tokens guardados → /auth/me para restaurar la sesión.
-  }, []);
+    restoreSession();
+  }, [restoreSession]);
 
   const login = useCallback(async (email, password) => {
     const data = await api('/auth/login', {

@@ -15,6 +15,7 @@ sealed class NavItem(val route: String, val title: String, val icon: ImageVector
     data object Dashboard : NavItem("dashboard", "Inicio", Icons.Default.Bolt, null)
     data object Projects : NavItem("projects", "Proyectos", Icons.Default.Apartment, "projects.read")
     data object Products : NavItem("products", "Productos", Icons.Default.Category, "products.read")
+    data object Customers : NavItem("customers", "Clientes", Icons.Default.People, "customers.read")
     data object Stock : NavItem("stock", "Inventario", Icons.Default.BarChart, "inventory.read")
     data object Purchases : NavItem("purchases", "Compras", Icons.Default.ShoppingCart, "purchases.read")
     data object Sales : NavItem("sales", "Ventas", Icons.Default.LocalOffer, "sales.orders.read")
@@ -32,6 +33,7 @@ fun TTBottomBar(
         NavItem.Dashboard,
         NavItem.Projects,
         NavItem.Products,
+        NavItem.Customers,
         NavItem.Stock,
         NavItem.Purchases,
         NavItem.Sales,

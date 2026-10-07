@@ -18,9 +18,51 @@ let refreshToken = null;
 let onSessionExpired = null;
 let refreshPromise = null;
 
+const STORAGE_KEYS = {
+  access: 'erp.accessToken',
+  refresh: 'erp.refreshToken',
+};
+
+function getStorage() {
+  try {
+    if (typeof globalThis !== 'undefined' && globalThis.localStorage) {
+      return globalThis.localStorage;
+    }
+  } catch {
+    // El entorno puede no exponer localStorage (React Native, SSR, etc.).
+  }
+  return null;
+}
+
+function persistTokens({ access = null, refresh = null } = {}) {
+  const storage = getStorage();
+  if (!storage) return;
+
+  if (access && refresh) {
+    storage.setItem(STORAGE_KEYS.access, access);
+    storage.setItem(STORAGE_KEYS.refresh, refresh);
+    return;
+  }
+
+  storage.removeItem(STORAGE_KEYS.access);
+  storage.removeItem(STORAGE_KEYS.refresh);
+}
+
+export function loadPersistedTokens() {
+  const storage = getStorage();
+  if (!storage) {
+    return { access: null, refresh: null };
+  }
+
+  const access = storage.getItem(STORAGE_KEYS.access) || null;
+  const refresh = storage.getItem(STORAGE_KEYS.refresh) || null;
+  return { access, refresh };
+}
+
 export function setTokens({ access = null, refresh = null } = {}) {
   accessToken = access;
   refreshToken = refresh;
+  persistTokens({ access, refresh });
 }
 
 export function getAccessToken() {

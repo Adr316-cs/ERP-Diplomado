@@ -17,6 +17,7 @@ import com.diplomado.erp.core.network.client.RetrofitClient
 import com.diplomado.erp.core.security.TokenStorage
 import com.diplomado.erp.feature.auth.presentation.LoginScreen
 import com.diplomado.erp.feature.configuration.presentation.AuditScreen
+import com.diplomado.erp.feature.customers.presentation.CustomersScreen
 import com.diplomado.erp.feature.dashboard.presentation.DashboardScreen
 import com.diplomado.erp.feature.finance.presentation.AccountsScreen
 import com.diplomado.erp.feature.inventory.movements.presentation.MovementsScreen
@@ -162,6 +163,9 @@ fun MainContainer(
             }
             composable(NavDestination.Products.route) {
                 ProductsScreen()
+            }
+            composable(NavDestination.Customers.route) {
+                CustomersScreen()
             }
             composable(NavDestination.Stock.route) {
                 StockScreen()

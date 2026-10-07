@@ -81,6 +81,15 @@ interface ErpApi {
     @GET("customers")
     suspend fun getCustomers(): Response<ApiResponse<List<CustomerDto>>>
 
+    @POST("customers")
+    suspend fun createCustomer(@Body customer: Map<String, @JvmSuppressWildcards Any?>): Response<ApiResponse<CustomerDto>>
+
+    @PATCH("customers/{id}")
+    suspend fun updateCustomer(@Path("id") id: String, @Body customer: Map<String, @JvmSuppressWildcards Any?>): Response<ApiResponse<CustomerDto>>
+
+    @DELETE("customers/{id}")
+    suspend fun deleteCustomer(@Path("id") id: String): Response<ApiResponse<Unit>>
+
     // Purchase & Sales Orders
     @GET("purchase-orders")
     suspend fun getPurchaseOrders(

@@ -9,6 +9,7 @@ sealed class NavDestination(val route: String) {
         fun createRoute(projectId: String) = "project_detail/$projectId"
     }
     data object Products : NavDestination("products")
+    data object Customers : NavDestination("customers")
     data object Stock : NavDestination("stock")
     data object Purchases : NavDestination("purchases")
     data object Sales : NavDestination("sales")

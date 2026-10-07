@@ -60,7 +60,10 @@ data class CustomerDto(
     @SerializedName("_id") val id: String,
     @SerializedName("code") val code: String,
     @SerializedName("name") val name: String,
+    @SerializedName("taxId") val taxId: String? = null,
     @SerializedName("email") val email: String? = null,
+    @SerializedName("phone") val phone: String? = null,
+    @SerializedName("notes") val notes: String? = null,
     @SerializedName("status") val status: String = "active"
 )
 
