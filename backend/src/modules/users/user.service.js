@@ -9,6 +9,7 @@ const {
 const userRepository = require('./user.repository');
 const roleRepository = require('../roles/role.repository');
 const branchRepository = require('../branches/branch.repository');
+const { sendWelcomeEmail } = require('../../services/email.service');
 
 /**
  * Servicio de usuarios (multiempresa estricto).
@@ -118,6 +119,18 @@ const userService = {
       status: data.status || 'active',
       isPlatformAdmin: false, // jamás marcable vía API (sólo semilla/plataforma)
     });
+
+    try {
+      await sendWelcomeEmail({
+        to: created.email,
+        name: `${created.name || ''} ${created.lastName || ''}`.trim(),
+      });
+    } catch (error) {
+      console.warn(
+        `[WELCOME_EMAIL] No se pudo enviar el correo a ${created.email}:`,
+        error.message
+      );
+    }
 
     // Model.create devuelve el documento COMPLETO: el hash NUNCA sale por la API
     // (select:false sólo protege a las consultas, no a los documentos creados).
