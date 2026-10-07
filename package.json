@@ -11,7 +11,7 @@
     "build:cloudflare": "npm --prefix frontend install && npm --prefix frontend run export:web",
     "deploy:cloudflare": "npx wrangler pages deploy frontend/dist --project-name=diplomado1 --branch=main",
     "web:serve": "node frontend/serve.js",
-    "seed": "npm --prefix backend run seed",
+    "seed": "npm --prefix backend run seed --",
     "indexes": "npm --prefix backend run indexes",
     "test": "npm --prefix backend test",
     "test:unit": "npm --prefix backend run test:unit",
