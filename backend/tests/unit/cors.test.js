@@ -45,4 +45,23 @@ describe('CORS preflight', () => {
 
     expect(response.headers['access-control-allow-origin']).toBe(localOrigin);
   });
+
+  test('incluye CORS en la respuesta POST del endpoint de login', async () => {
+    const response = await request(app)
+      .post('/api/v1/auth/login')
+      .set('Origin', frontendOrigin)
+      .send({})
+      .expect(422);
+
+    expect(response.headers['access-control-allow-origin']).toBe(frontendOrigin);
+  });
+
+  test('incluye CORS en una respuesta GET que requiere autenticación', async () => {
+    const response = await request(app)
+      .get('/api/v1/users')
+      .set('Origin', frontendOrigin)
+      .expect(401);
+
+    expect(response.headers['access-control-allow-origin']).toBe(frontendOrigin);
+  });
 });

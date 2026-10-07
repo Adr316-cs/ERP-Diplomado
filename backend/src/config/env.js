@@ -17,6 +17,15 @@ require('dotenv').config(fs.existsSync(rootEnvPath) ? { path: rootEnvPath } : un
 // Accept the legacy MONGODB_URI name while preferring the canonical MONGO_URI.
 const mongoUri = process.env.MONGO_URI || process.env.MONGODB_URI;
 const REQUIRED = ['JWT_ACCESS_SECRET', 'JWT_REFRESH_SECRET'];
+const corsOriginsConfig =
+  process.env.CORS_ORIGINS ||
+  (process.env.NODE_ENV === 'production'
+    ? ''
+    : 'http://localhost:19006,http://localhost:8081');
+const corsOrigins = corsOriginsConfig
+  .split(',')
+  .map((origin) => origin.trim())
+  .filter(Boolean);
 
 function fail(message) {
   // Se imprime en consola a propósito: es el arranque, el logger aún no existe.
@@ -26,6 +35,9 @@ function fail(message) {
 
 const missing = REQUIRED.filter((key) => !process.env[key]);
 if (!mongoUri) missing.unshift('MONGO_URI (o MONGODB_URI)');
+if (process.env.NODE_ENV === 'production' && corsOrigins.length === 0) {
+  missing.push('CORS_ORIGINS');
+}
 if (missing.length) {
   fail(`Faltan variables de entorno obligatorias: ${missing.join(', ')}. Copia .env.example a .env.`);
 }
@@ -50,10 +62,7 @@ const env = {
     accessExpires: process.env.JWT_ACCESS_EXPIRES || '15m',
     refreshExpires: process.env.JWT_REFRESH_EXPIRES || '7d',
   },
-  corsOrigins: (process.env.CORS_ORIGINS || 'http://localhost:19006,http://localhost:8081')
-    .split(',')
-    .map((origin) => origin.trim())
-    .filter(Boolean),
+  corsOrigins,
   seed: {
     adminEmail: process.env.SEED_ADMIN_EMAIL || 'admin@example.com',
     adminPassword: process.env.SEED_ADMIN_PASSWORD || '',

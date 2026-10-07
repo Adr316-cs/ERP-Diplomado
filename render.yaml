@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: tectode-erp-backend
+    name: erp-diplomado
     env: node
     region: oregon
     plan: free
@@ -18,4 +18,4 @@ services:
       - key: JWT_REFRESH_SECRET
         generateValue: true
       - key: CORS_ORIGINS
-        value: "http://localhost:19006,http://localhost:8081,https://erp-diplomado.luis-adriancanosampedro2006.workers.dev"
+        value: "https://erp-diplomado.luis-adriancanosampedro2006.workers.dev"

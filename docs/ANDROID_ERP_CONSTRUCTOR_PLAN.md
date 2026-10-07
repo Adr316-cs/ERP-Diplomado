@@ -53,7 +53,7 @@ Cada transacción importante (movimiento de material, orden de compra, gasto, av
 ## 3. ANÁLISIS DE REUTILIZACIÓN Y CAMBIOS NECESARIOS
 
 ### 3.1. Lo que se Reutiliza Directamente
-1. **Backend REST API Node.js/Express (`/api/v1`)**: No se crea un backend nuevo. Todas las llamadas se realizan a la API REST de producción desplegada en Render (`https://diplomado-cte0.onrender.com/api/v1`).
+1. **Backend REST API Node.js/Express (`/api/v1`)**: No se crea un backend nuevo. Todas las llamadas se realizan a la API REST de producción desplegada en Render (`https://erp-diplomado.onrender.com/api/v1`).
 2. **Aislamiento Multi-tenant (`companyId`)**: Garantizado por `BaseRepository` y middlewares de sesión en el backend. Android nunca manipula manualmente `companyId`.
 3. **Seguridad JWT + RBAC**: Rotación de tokens con `jti`, almacenamiento en **Android Keystore** con `EncryptedSharedPreferences`.
 4. **Catálogo de Materiales, Proveedores, Clientes, Inventarios y Finanzas**: Módulos backend probados y funcionales.
